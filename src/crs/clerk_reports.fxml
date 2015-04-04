@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="413.0" prefWidth="1057.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="crs.Clerk_ReportsController">
+   <children>
+      <Button layoutX="147.0" layoutY="105.0" mnemonicParsing="false" onAction="#LoadAvailableVehicles" text="Available Vehicles" />
+      <Button layoutX="147.0" layoutY="176.0" mnemonicParsing="false" onAction="#LoadOverdue" prefHeight="31.0" prefWidth="138.0" text="Overdue Vehicles" />
+      <Button layoutX="147.0" layoutY="248.0" mnemonicParsing="false" onAction="#LoadForSaleVehicles" text="For Sale Vehicles" />
+      <Separator layoutX="341.0" layoutY="36.0" orientation="VERTICAL" prefHeight="340.0" prefWidth="7.0" />
+      <Pane fx:id="content_report" layoutX="348.0" layoutY="5.0" prefHeight="406.0" prefWidth="704.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffc51f" height="271.0" layoutY="64.0" stroke="BLACK" strokeType="INSIDE" width="24.0" />
+   </children>
+</Pane>

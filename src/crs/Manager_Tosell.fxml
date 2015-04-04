@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="491.0" prefWidth="774.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Manager_TosellController">
+  <children>
+    <Pane id="toSellPane" layoutX="2.0" layoutY="0.0" prefHeight="491.0" prefWidth="773.0" visible="true">
+      <children>
+        <ComboBox id="location" fx:id="dropLocation_sale" layoutX="469.0" layoutY="7.0" prefHeight="25.0" prefWidth="157.0" promptText="" />
+        <ComboBox id="location" fx:id="dropCategory_sale" layoutX="180.0" layoutY="43.0" prefHeight="25.0" prefWidth="157.0" promptText="" />
+        <ComboBox id="location" fx:id="dropYears" layoutX="469.0" layoutY="45.0" prefHeight="25.0" prefWidth="157.0" promptText="" />
+        <Button layoutX="339.0" layoutY="70.0" mnemonicParsing="false" onAction="#searchListByLCY" text="Search" />
+        <TableView fx:id="tosellTable" layoutX="27.0" layoutY="98.0" prefHeight="253.0" prefWidth="720.0" />
+        <Button layoutX="524.0" layoutY="363.0" mnemonicParsing="false" onAction="#moveToSellList" text="Move to Sell List" />
+        <ComboBox fx:id="dropVtype_sell" layoutX="180.0" layoutY="7.0" onAction="#ondropVtype_sell" prefHeight="21.0" prefWidth="157.0" promptText="">
+          <items>
+            <FXCollections fx:factory="observableArrayList">
+              <String fx:value="Item 1" />
+              <String fx:value="Item 2" />
+              <String fx:value="Item 3" />
+            </FXCollections>
+          </items>
+        </ComboBox>
+        <TextField fx:id="selling_price_tosale" layoutX="298.0" layoutY="363.0" prefWidth="157.0" />
+        <Label layoutX="203.0" layoutY="365.0" text="Selling Price" />
+        <Label layoutX="124.0" layoutY="10.0" text="Category" />
+        <Label layoutX="133.0" layoutY="48.0" text="Vtype" />
+        <Label layoutX="395.0" layoutY="46.0" text="Year of use" />
+        <Label layoutX="418.0" layoutY="7.0" text="Branch" />
+        <Label fx:id="alert_tosell" layoutX="431.0" layoutY="116.0" text="alert" visible="false" />
+        <Label id="alert2_tosell" fx:id="alert_tosell2" layoutX="505.0" layoutY="449.0" text="alert" visible="false" />
+      </children>
+    </Pane>
+  </children>
+</AnchorPane>

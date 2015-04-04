@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="485.0" prefWidth="743.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Manager_SoldController">
+  <children>
+    <Pane id="soldPane" layoutX="0.0" layoutY="0.0" prefHeight="446.0" prefWidth="701.0">
+      <children>
+        <Button layoutX="415.0" layoutY="312.0" mnemonicParsing="false" onAction="#onSoldTo" text="Sold" />
+        <TableView fx:id="SoldTable" layoutX="14.0" layoutY="14.0" prefHeight="242.00009999999747" prefWidth="641.0" />
+        <TextField fx:id="input_sold_price" layoutX="133.0" layoutY="268.0" prefWidth="184.0" />
+        <TextField fx:id="input_sold_date" layoutX="133.0" layoutY="301.0" prefWidth="184.0" />
+        <TextField fx:id="input_sold_soldto" layoutX="415.0" layoutY="271.0" prefWidth="169.0" />
+        <Label layoutX="95.0" layoutY="271.0" text="Price" />
+        <Label layoutX="377.0" layoutY="271.0" text="soldto" />
+        <DatePicker fx:id="sold_datepicker" layoutX="133.0" layoutY="301.0" />
+        <Label fx:id="alert_sold" layoutX="471.0" layoutY="387.0" text="Label" visible="false" />
+        <Label id="alert_sold" layoutX="74.0" layoutY="301.0" text="sold date" />
+      </children>
+    </Pane>
+  </children>
+</AnchorPane>

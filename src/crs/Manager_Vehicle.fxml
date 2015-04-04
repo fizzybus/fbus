@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0000999999975" prefWidth="599.9998779296875" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Manager_VehicleController">
+  <children>
+    <Button id="gotoAdd" layoutX="27.0" layoutY="86.0" mnemonicParsing="false" onAction="#gotoAdd" text="add vehicle" />
+    <Button layoutX="32.0" layoutY="153.0" mnemonicParsing="false" onAction="#gotoSell" text="sell vehicle" />
+    <Button layoutX="32.0" layoutY="229.0" mnemonicParsing="false" onAction="#gotoSellOut" text="sell out vehicle" />
+    <Pane layoutX="210.0" layoutY="64.0" prefHeight="200.0" prefWidth="200.0" />
+    <Pane fx:id="main_pane" layoutX="201.0" layoutY="14.0" prefHeight="386.0001220703125" prefWidth="519.0">
+      <children>
+        <Pane id="main_pane_tosell" fx:id="main_pane_add" layoutX="209.0" layoutY="36.0" prefHeight="146.0" prefWidth="147.0" />
+        <Pane id="main_pane_setrate" fx:id="main_pane_tosell" layoutX="7.0" layoutY="36.0" prefHeight="128.0" prefWidth="127.0" />
+        <Pane id="main_pane_report" fx:id="main_pane_sold" layoutX="134.0" layoutY="219.0" prefHeight="200.0" prefWidth="200.0" />
+      </children>
+    </Pane>
+  </children>
+</AnchorPane>

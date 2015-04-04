@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="413.0" prefWidth="1057.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="crs.ManageReservationController">
+   <children>
+      <Separator layoutX="529.0" layoutY="70.0" orientation="VERTICAL" prefHeight="274.0" prefWidth="6.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffdc1e" height="200.0" layoutY="93.0" stroke="WHITE" strokeType="INSIDE" width="31.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffdc1e" height="200.0" layoutX="1026.0" layoutY="93.0" stroke="WHITE" strokeType="INSIDE" width="31.0" />
+      <Separator layoutX="535.0" layoutY="70.0" orientation="VERTICAL" prefHeight="274.0" prefWidth="6.0" />
+      <Pane fx:id="content_managereservation" layoutX="111.0" layoutY="44.0" prefHeight="331.0" prefWidth="387.0" />
+      <Button layoutX="691.0" layoutY="116.0" mnemonicParsing="false" onAction="#RentViaReservation" text="Rent via Reservation" />
+      <Button layoutX="692.0" layoutY="194.0" mnemonicParsing="false" onAction="#CancelReservation" text="Cancel Reservation" />
+   </children>
+</Pane>
