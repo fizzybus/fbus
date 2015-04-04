@@ -21,12 +21,12 @@ import javafx.scene.layout.Pane;
  *
  * @author Bhupinder
  */
-public class MenuController implements Initializable {
+public class MenuClerkController implements Initializable {
 
     /**
      * Initializes the controller class.
      */
-    @FXML private Pane content_pane;
+    @FXML private Pane content_pane,menu_clerk,menu_manager;
     
     @FXML
     private void LoadProcessReturn(ActionEvent event)throws IOException  {   
@@ -47,6 +47,8 @@ public class MenuController implements Initializable {
         content_pane.getChildren().clear();
    content_pane.getChildren().add(FXMLLoader.load(getClass().getResource("ManageCustomer.fxml")));
     }
+    
+     
     
     @FXML
     private void LoadClerkReports(ActionEvent event)throws IOException  {
@@ -88,7 +90,7 @@ public class MenuController implements Initializable {
             // TODO
             content_pane.getChildren().add(FXMLLoader.load(getClass().getResource("BookCar.fxml")));
         } catch (IOException ex) {
-            Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MenuClerkController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }    
     

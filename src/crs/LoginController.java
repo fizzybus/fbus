@@ -18,7 +18,9 @@ import javafx.scene.Node;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import java.sql.*;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
 
 /**
  *
@@ -27,34 +29,84 @@ import javafx.scene.control.TextField;
 public class LoginController implements Initializable {
     
     @FXML
-    private Label fail_login_message;
+    private Label fail_login_message,Clerk,Manager,Admin;
     @FXML
-    private TextField username1;
+    private TextField username;
     @FXML
-    private TextField password1;
+    private PasswordField password;
     final private String user= "root";
     final private String pass= "";
+    private Integer Login_user; //1 = clerk 2=manager 3=Amin
     
     @FXML
-    private void goToScreen2(ActionEvent event)throws IOException  {
+    private void goTomenu(ActionEvent event)throws IOException  {
        
-        if(true /* ValidLogin() */) // Commented for testing
-            change_scene("menu.fxml",event);
-        else
-          fail_login_message.setText(" Login Failed, please try again !");
+        if(ValidLogin()) // Commented for testing
+        {
+            switch(Login_user) {
+        case 2:
+            change_scene("menu_manager.fxml",event);
+        break;
+        case 3:
+            change_scene("menu_admin.fxml",event);
+        break;
+        default:
+            change_scene("menu_clerk.fxml",event);
     }
+        
+        }
+        else
+          fail_login_message.setText(" Login Failed,try again ..");
+    }
+    
+    @FXML
+    public void Login_clerk() {
+        Login_user = 1;
+        Clerk.setVisible(true);
+        Manager.setVisible(false);
+        Admin.setVisible(false);
+    }
+    
+    @FXML
+    public void Login_manager() {
+        Login_user= 2;
+        Clerk.setVisible(false);
+        Manager.setVisible(true);
+        Admin.setVisible(false);
+    }
+    
+      @FXML
+    public void Login_admin() {
+        Login_user = 3;
+        Clerk.setVisible(false);
+        Manager.setVisible(false);
+        Admin.setVisible(true);
+    }
+    
+    
     
     @FXML
     private void goToScreen3(ActionEvent event) {
         System.out.println("You clicked me!");
-        //label.setText("Hello World!");
+         
     }
     public boolean ValidLogin() {
+        String Type=null;
+        switch(Login_user) {
+        case 2:
+            Type = "manager";
+        break;
+        case 3:
+            Type = "admin";
+        break;
+        default:
+            Type="clerk";
+    }
         boolean valid = true;
         try {
             Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
             Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select * from employees where username='"+  username1.getText()+"' and password='"+password1.getText()+"'");
+            ResultSet myRs = myStmt.executeQuery("select * from employees where username='"+  username.getText()+"' and password='"+password.getText()+"' and Type='"+Type +"'");
             int count = 0;
             while (myRs.next()) { count++; }
             if(count==0) valid = false;
@@ -64,16 +116,22 @@ public class LoginController implements Initializable {
         return valid;
     }
     public void change_scene(String fxml,ActionEvent event) throws IOException {
-        Parent clerk =  FXMLLoader.load(getClass().getResource(fxml));
-        Scene home_page_scene = new Scene(clerk);
-        Stage app_stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-        app_stage.setScene(home_page_scene);
-        app_stage.show(); 
+      
+       FXMLLoader loader = new FXMLLoader();
+       loader.setLocation(getClass().getResource(fxml));
+       loader.load();
+       Parent p = loader.getRoot();
+       Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+       stage.setScene(new Scene(p));
+       stage.show();    
     }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        Login_user = 1;
+        Clerk.setVisible(false);
+        Manager.setVisible(false);
+        Admin.setVisible(false);
     }    
     
 }

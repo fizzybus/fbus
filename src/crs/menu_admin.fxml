@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="1050.0" style="-fx-background-color: white;" stylesheets="@../inc/screen1.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="crs.MenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="567.0" prefWidth="1050.0" style="-fx-background-color: white;" stylesheets="@../inc/screen1.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="crs.MenuAdminController">
   <children>
     <Pane fx:id="content_pane" layoutY="89.0" prefHeight="417.0" prefWidth="1050.0" style="-fx-background-color: #fbfbfb;" stylesheets="/inc/menu.css" />
     <ImageView fitHeight="34.0" fitWidth="49.0" layoutX="31.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
@@ -37,18 +37,22 @@
         </Label>
         <Label layoutX="132.0" layoutY="8.0" text="Activated" />
         <Label layoutX="870.0" layoutY="8.0" prefHeight="21.0" prefWidth="155.0" text="\@Copyright 2015 CRS  " />
-          <Button layoutX="310.0" layoutY="3.0" mnemonicParsing="false" onAction="#LoadManageVehicle" text="Manage Vehicle" />
-          <Button layoutX="486.0" layoutY="3.0" mnemonicParsing="false" onAction="#LoadRate" text="Manage rate" />
-          <Button layoutX="626.0" layoutY="1.0" mnemonicParsing="false" onAction="#LoadReports" style="-fx-background-color: white;" styleClass="button-menu-bar" text="Reports" />
       </children>
     </Pane>
-      <Pane layoutX="292.0" layoutY="32.0" prefHeight="43.0" prefWidth="728.0" style="-: red;">
+      <Pane fx:id="menu_clerk" layoutX="292.0" layoutY="10.0" prefHeight="43.0" prefWidth="728.0" style="-: red;">
          <children>
           <Button layoutX="14.0" layoutY="5.0" mnemonicParsing="false" onAction="#LoadRentReserver" style="-fx-background-color: white; -fx-border-color: white;" styleClass="button-menu-bar" text="Book Car" />
           <Button layoutX="116.0" layoutY="6.0" mnemonicParsing="false" onAction="#LoadMangeCustomer" style="-fx-background-color: white;" styleClass="button-menu-bar" text="Manage Customer" />
           <Button layoutX="286.0" layoutY="6.0" mnemonicParsing="false" onAction="#LoadManageReservation" style="-fx-background-color: white;" styleClass="button-menu-bar" text="Manage Reservation" />
           <Button layoutX="475.0" layoutY="6.0" mnemonicParsing="false" onAction="#LoadProcessReturn" style="-fx-background-color: white;" styleClass="button-menu-bar" text="Process Return" />
             <Button layoutX="614.0" layoutY="7.0" mnemonicParsing="false" onAction="#LoadClerkReports" prefHeight="31.0" prefWidth="114.0" style="-fx-background-color: white;" styleClass="button-menu-bar" text="Lookup" />
+         </children>
+      </Pane>
+      <Pane fx:id="menu_manager" layoutX="305.0" layoutY="45.0" prefHeight="43.0" prefWidth="399.0">
+         <children>
+          <Button layoutX="1.0" layoutY="4.0" mnemonicParsing="false" onAction="#LoadReports" style="-fx-background-color: white; -fx-border-color: white;" styleClass="button-menu-bar" text="Reports" />
+          <Button layoutX="118.0" layoutY="4.0" mnemonicParsing="false" onAction="#LoadRate" style="-fx-background-color: white; -fx-border-color: white;" styleClass="button-menu-bar" text="Manage rate" />
+          <Button layoutX="273.0" layoutY="4.0" mnemonicParsing="false" onAction="#LoadManageVehicle" style="-fx-background-color: white; -fx-border-color: white;" styleClass="button-menu-bar" text="Manage Vehicle" />
          </children>
       </Pane>
   </children>

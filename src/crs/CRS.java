@@ -28,7 +28,7 @@ public class CRS extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("menu.fxml"));  
+        Parent root = FXMLLoader.load(getClass().getResource("menu_clerk.fxml"));  
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/inc/screen1.css").toExternalForm());
         stage.setScene(scene);

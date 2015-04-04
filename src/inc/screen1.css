@@ -3,8 +3,8 @@
 }
 
 .button:hover {
- -fx-background-color: rgb(242,242,242);
--fx-border-color: #ffcb05;
+ -fx-background-color: black;
+-fx-text-fill: white;
 -fx-border-width: 1.5;
 }
 
@@ -19,8 +19,23 @@
     -fx-text-fill: black;
     -fx-border-color: white;
 }
-
-
-.tab-pane:top .tab-header-area .tab-header-background {
-	//-fx-background-color: rgb(242,242,242);
+.menu-side-bar{
+-fx-background-color:fbfbfb;
+-fx-border-color:F8F8F8;
 }
+
+.button-explanation {
+    -fx-text-fill: #999;
+}
+
+.button-form {
+ -fx-background-color: #F3F3F3;
+ -fx-border-color:#F3F3F3;
+ -fx-border: none;
+}
+.menu-side-bar:hover {
+    -fx-text-fill: #999;
+    -fx-background-color:fbfbfb;
+    -fx-border-color: white;
+}
+
