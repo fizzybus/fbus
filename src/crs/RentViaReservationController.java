@@ -46,7 +46,7 @@ public class RentViaReservationController implements Initializable {
     private Integer Confno;
     private Integer selection; // Did the user selcted phone or give confirmation number (phone =0) (Confirmation =1)
     private String customer_phone;
-    private Boolean valid_confirmation_number=false;
+    private Boolean valid_confirmation_number;
     final private String user= "root";
     final private String pass= "";
     /**
@@ -58,7 +58,6 @@ public class RentViaReservationController implements Initializable {
          else {ds1.setText(""); ds2.setText(""); ds3.setText("");}
          License_no.setText("");
         Creditcardnumber.setText("");
-        message.setText(" ");
     }
     @FXML public void Toggle() {
         if("Phone"==phone_confno.getValue()) {
@@ -100,11 +99,8 @@ public class RentViaReservationController implements Initializable {
        ListReservationsController controller = loader.getController();
        controller.setInfo(customer_phone);        
        stage.showAndWait();
-       Confno = controller.ConfNo(); 
-       if(Confno==null) {message.setText("Please select a reservation .."); valid_confirmation_number= false;}
-       else valid_confirmation_number= true;
-           
-      
+      Confno = controller.ConfNo();   
+      valid_confirmation_number= true;
         }
     }
     
@@ -116,26 +112,22 @@ public class RentViaReservationController implements Initializable {
         String Pickup_time,Dropoff_time;
         Integer Odometer;
         
-        Boolean valid_Dlicense=true,valid_CardNumber=true,isValidExpiryDate=true;
+        Boolean valid_Dlicense=true,valid_CardNumber=true;
         /* Vailate License Number */
-        try   {Dlicense = Integer.parseInt((String)License_no.getText());}
+        try   {Dlicense = Integer.parseInt((String)License_no.getText());message.setText("");}
         catch (NumberFormatException e) {message.setText("Enter valid license");valid_Dlicense=false;}
         
         /* Vailate Credit Card Number */
-        try   {CardNumber = Integer.parseInt((String)Creditcardnumber.getText());}
+        try   {CardNumber = Integer.parseInt((String)Creditcardnumber.getText());message.setText("");}
         catch (NumberFormatException e) {message.setText("Enter card number");valid_CardNumber=false;}
         
         if(selection==1) {
-            try   {Confno = Integer.parseInt((String)confirmation_number.getText()); valid_confirmation_number=true;}
+            try   {Confno = Integer.parseInt((String)confirmation_number.getText());message.setText(""); valid_confirmation_number=true;}
         catch (NumberFormatException e) {message.setText("Invalid confrimation");valid_confirmation_number=false;}
         }
         
-        if(null==expirydate.getValue())
-        {isValidExpiryDate = false; message.setText(" Select Expiry Date ..");}
         
-        if(!valid_confirmation_number) message.setText("Select reservation record ..");
-        
-        if(valid_Dlicense && valid_CardNumber && valid_confirmation_number && isValidExpiryDate)  {
+        if(valid_Dlicense && valid_CardNumber && valid_confirmation_number)  {
             try {
                 Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
                 Statement myStmt = myConn.createStatement();

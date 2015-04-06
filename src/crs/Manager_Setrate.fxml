@@ -7,9 +7,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Manager_SetrateController">
+<AnchorPane id="AnchorPane" prefHeight="436.0" prefWidth="956.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Manager_SetrateController">
   <children>
-    <Pane id="setRatePane" layoutX="22.0" layoutY="44.0" prefHeight="312.0000999999975" prefWidth="556.0">
+    <Pane id="setRatePane" layoutX="327.0" layoutY="44.0" prefHeight="312.0000999999975" prefWidth="556.0">
       <children>
         <TextField fx:id="hourly_rate" layoutX="122.0" layoutY="78.0" prefWidth="147.0" />
         <Label layoutX="50.0" layoutY="78.0" text="Hourly Rate" />
@@ -18,7 +18,7 @@
         <TextField fx:id="weekly_rate" layoutX="122.0" layoutY="142.0" prefWidth="147.0" />
         <Label layoutX="50.0" layoutY="142.0" text="Weekly Rate" />
         <Button fx:id="button_update_rate" layoutX="269.0" layoutY="221.0" mnemonicParsing="false" onAction="#on_button_update_rate" text="update" />
-        <ComboBox fx:id="dropCategory_rate" layoutX="339.0" layoutY="29.0" onAction="#onCategory_rate" prefHeight="21.0" prefWidth="147.0" promptText="">
+        <ComboBox fx:id="dropCategory_rate" layoutX="366.0" layoutY="29.0" onAction="#onCategory_rate" prefHeight="21.0" prefWidth="147.0" promptText="">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="Item 1" />
@@ -36,7 +36,7 @@
         <TextField fx:id="per_km_rate" layoutX="122.0" layoutY="179.0" prefWidth="147.0" />
         <Label layoutX="50.0" layoutY="179.0" text="perKM rate" />
         <Button fx:id="button_save_rate" layoutX="338.0" layoutY="215.0" mnemonicParsing="false" onAction="#on_button_save_rate" text="Save" visible="false" />
-        <ComboBox fx:id="dropVType_rate" layoutX="139.0" layoutY="29.0" onAction="#onVtype_rate" prefHeight="21.0" prefWidth="90.0">
+        <ComboBox fx:id="dropVType_rate" layoutX="116.0" layoutY="32.0" onAction="#onVtype_rate" prefHeight="20.999900000002526" prefWidth="124.0">
           <items>
             <FXCollections fx:factory="observableArrayList">
               <String fx:value="Item 1" />
@@ -46,8 +46,8 @@
           </items>
         </ComboBox>
         <Label fx:id="alert_setrate" layoutX="350.0" layoutY="226.0" text="Label" visible="false" />
-        <Label layoutX="75.0" layoutY="32.0" text="category" />
-        <Label layoutX="265.0" layoutY="32.0" text="vtype name" />
+        <Label layoutX="50.0" layoutY="32.0" text="Type" />
+        <Label layoutX="298.0" layoutY="32.0" text="Category" />
       </children>
     </Pane>
   </children>

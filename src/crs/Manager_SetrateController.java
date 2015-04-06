@@ -85,7 +85,7 @@ public class Manager_SetrateController implements Initializable {
     private void onCategory_rate(ActionEvent event){
         if( dropCategory_rate.getValue()==null  ) return;
         String type = dropCategory_rate.getValue().toString();
-        Price price = new Price();//写到这getPrice（）函数还没写
+        Price price = new Price(); 
         price = CRS.getPrice(type);
         hourly_rate.setText( price.hourly_rate+"");
         ins_hour.setText(  price.ins_hrate+"");
@@ -93,7 +93,7 @@ public class Manager_SetrateController implements Initializable {
         ins_daily.setText( price.ins_drate+"");
         weekly_rate.setText( price.weekly_rate+"");
         ins_week.setText( price.ins_wrate+"");
-        per_km_rate.setText( price.km_rate+"");    
+        per_km_rate.setText( price.km_rate+"");     
     }
     
     
@@ -102,7 +102,10 @@ public class Manager_SetrateController implements Initializable {
         setEditable();
         
         button_update_rate.setVisible(false);
+        button_save_rate.setLayoutX(button_update_rate.getLayoutX()  );
+        button_save_rate.setLayoutY(button_update_rate.getLayoutY()  );
         button_save_rate.setVisible(true);
+        
     }
     @FXML
     private void  on_button_save_rate(ActionEvent event) {
