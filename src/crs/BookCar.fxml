@@ -48,20 +48,16 @@
                   <Pane fx:id="pane_validate" layoutX="-2.0" layoutY="163.0" prefHeight="94.0" prefWidth="361.0">
                      <children>
                         <Button layoutY="-1.0" mnemonicParsing="false" onAction="#IsCustomerValid" prefHeight="31.0" prefWidth="91.0" text="Vaildate" />
-                        <Label fx:id="customer_indatabase" layoutX="124.0" layoutY="4.0" prefHeight="21.0" prefWidth="233.0">
-                           <font>
-                              <Font size="12.0" />
-                           </font></Label>
+                        <Label fx:id="customer_indatabase" layoutX="124.0" layoutY="4.0" prefHeight="21.0" prefWidth="142.0" />
                      </children>
                   </Pane>
                   <DatePicker fx:id="card_expiry" layoutX="206.0" layoutY="215.0" prefHeight="31.0" prefWidth="149.0" promptText="Expiry date" />
-                  <Label fx:id="message_custinfo" layoutX="4.0" layoutY="300.0" prefHeight="21.0" prefWidth="168.0" />
                </children>
             </Pane>
             <Pane prefHeight="383.0" prefWidth="380.0" GridPane.columnIndex="1">
                <children>
                   <ComboBox fx:id="location" layoutX="20.0" layoutY="71.0" prefHeight="31.0" prefWidth="174.0" promptText="Select Location" />
-                  <ComboBox fx:id="vehicletype" layoutX="208.0" layoutY="71.0" prefHeight="31.0" prefWidth="149.0" promptText="Select type" />
+                  <ComboBox fx:id="vehicletype" layoutX="208.0" layoutY="71.0" onAction="#getVehicleType" prefHeight="31.0" prefWidth="149.0" promptText="Select type" />
                   <Button fx:id="list_vehicle_button" layoutX="23.0" layoutY="115.0" mnemonicParsing="false" onAction="#ListVehicles" prefHeight="31.0" prefWidth="129.0" text="List Vehicle" />
                   <DatePicker fx:id="pickup" layoutX="20.0" layoutY="206.0" prefHeight="31.0" prefWidth="174.0" />
                   <Label layoutX="23.0" layoutY="181.0" text="Pickup Date and Time">
@@ -80,14 +76,8 @@
                   <ComboBox fx:id="h2" layoutX="207.0" layoutY="285.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="70.0" promptText="hh" />
                   <ComboBox fx:id="m2" layoutX="282.0" layoutY="285.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="79.0" promptText="mm" />
                   <Button layoutX="27.0" layoutY="328.0" mnemonicParsing="false" onAction="#IsAvailableTimePeriod" text="Check availability" />
-                  <Label fx:id="location_label" layoutX="162.0" layoutY="120.0" prefHeight="21.0" prefWidth="193.0">
-                     <font>
-                        <Font size="12.0" />
-                     </font></Label>
-                  <Label fx:id="date_label" layoutX="173.0" layoutY="333.0" prefHeight="21.0" prefWidth="208.0">
-                     <font>
-                        <Font size="12.0" />
-                     </font></Label>
+                  <Label fx:id="location_label" layoutX="181.0" layoutY="120.0" prefHeight="21.0" prefWidth="107.0" />
+                  <Label fx:id="date_label" layoutX="181.0" layoutY="333.0" prefHeight="21.0" prefWidth="82.0" />
                   <Label layoutX="11.0" layoutY="14.0" prefHeight="31.0" prefWidth="305.0" style="-fx-background-color: black;" text="   Quick lookup" textFill="WHITE">
                      <font>
                         <Font name="System Bold Italic" size="17.0" />
@@ -110,10 +100,7 @@
                   <Button layoutX="21.0" layoutY="161.0" mnemonicParsing="false" onAction="#CalculateEstimatedCost" prefHeight="31.0" prefWidth="133.0" text="Estimated Cost" />
                   <Button fx:id="pop_confirmation_button" layoutX="107.0" layoutY="289.0" mnemonicParsing="false" onAction="#Load_Confirmation" prefHeight="31.0" prefWidth="135.0" text="Continue" />
                   <Button layoutX="107.0" layoutY="327.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="135.0" text="Cancel" />
-                  <Label fx:id="estimated_cost" layoutX="46.0" layoutY="201.0" prefHeight="21.0" prefWidth="208.0">
-                     <font>
-                        <Font size="12.0" />
-                     </font></Label>
+                  <Label fx:id="estimated_cost" layoutX="46.0" layoutY="201.0" prefHeight="21.0" prefWidth="82.0" />
                   <Label layoutX="12.0" layoutY="14.0" prefHeight="31.0" prefWidth="177.0" style="-fx-background-color: black;" text="   Costs" textFill="WHITE">
                      <font>
                         <Font name="System Bold Italic" size="17.0" />

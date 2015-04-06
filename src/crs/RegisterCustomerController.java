@@ -5,14 +5,11 @@
  */
 package crs;
 
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,51 +59,18 @@ public class RegisterCustomerController implements Initializable {
         
     }
     
-    @FXML private void Submit() throws SQLException {
-        
-            Boolean _validlocation = true;
-            Boolean _validcity = true;
-            Boolean _validname = true;
-            String _location = location.getText();
+    @FXML private void Submit() {
+        String Address = (String)location.getText()+", "+(String)city.getText();
+        String phone =(String)ds1.getText() +"-"+ (String)ds2.getText() +"-"+ (String)ds3.getText();
+         try {
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
             
-            if( (null == _location) ||  ("".equals(_location) )) 
-            {registration_status.setText("Adress missing !"); _validlocation = false;}
-            System.out.println("Location="+_location);
-            
-            String _city = city.getText();
-            if((null==_city) || ("".equals(_city)))
-            {registration_status.setText("City missing !"); _validcity = false; }
-            
-            String _name = cust_name.getText();
-            if((null==_name)|| ("".equals(_name)))
-            {registration_status.setText("Customer name missing !"); _validname = false; }
-        
-            Integer _ds1,_ds2,_ds3;
-            Boolean isValidPhone = true;
-            try   {
-                    _ds1 = Integer.parseInt((String)ds1.getText());
-                    _ds2 = Integer.parseInt((String)ds2.getText());
-                    _ds3 = Integer.parseInt((String)ds3.getText());
-                   
-                    //isValidCustomer  = true;
-            }
-            catch (NumberFormatException e) {registration_status.setText("Invalid Phone Number"); isValidPhone  = false;}
-        
-        if(isValidPhone && _validcity && _validlocation && _validname ) {
-            
-                   Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
-                   String phone =(String)ds1.getText() +"-"+ (String)ds2.getText() +"-"+ (String)ds3.getText();
-                   String Address = (String)location.getText()+", "+(String)city.getText();
-                   Statement myStmt = myConn.createStatement();
-                   String sql = "INSERT INTO customer (phone_number,Name,address,roadstar) " +
-                                "VALUES ('"+phone+"','"  + (String)cust_name.getText()+ "','"+Address+"',"+road_star+")";
-                   try {
-                   myStmt.executeUpdate(sql);
-                   registration_status.setText("Customer added !");
-               } catch (SQLIntegrityConstraintViolationException | MySQLIntegrityConstraintViolationException ex) { registration_status.setText("Customer already exists ..");}  
-       
-        }
-         
+            Statement myStmt = myConn.createStatement();
+            String sql = "INSERT INTO customer (phone_number,Name,address,roadstar) " +
+                         "VALUES ('"+phone+"','"  + (String)cust_name.getText()+ "','"+Address+"',"+road_star+")";
+            myStmt.executeUpdate(sql);
+            registration_status.setText("Customer added !");
+        } catch (Exception exc) { registration_status.setText("Registration failed!"); exc.printStackTrace();}  
     }
     
     

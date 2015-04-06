@@ -56,17 +56,21 @@ public class Manager_TosellController implements Initializable {
     
             
 
-     // setLocation(dropLocation_sale);
-      //  setVtype(dropVtype_sell);
-      //  setYears();
-      //updateTosellTable();
-     // setUpToSell();
+      setLocation(dropLocation_sale);
+      setVtype(dropVtype_sell);
+      
+      updateTosellTable();
+      setUpToSell();
+      alert_tosell.setLayoutX( searchButton.getLayoutX()-20  );
+      alert_tosell.setLayoutY( searchButton.getLayoutY()+40  );
+      alert_tosell2.setLayoutX( moveButton.getLayoutX()+120  );
+      alert_tosell2.setLayoutY( moveButton.getLayoutY()    );
     }   
     
    @FXML
     private Pane toSellPane;
     @FXML
-    private ComboBox dropYears;
+    private TextField dropYears;
     @FXML
     private ComboBox dropCategory_sale;
     @FXML
@@ -81,12 +85,12 @@ public class Manager_TosellController implements Initializable {
     private Label alert_tosell;    
     @FXML
     private Label alert_tosell2;
-        
-  /*  private String location_sell = "";
-    private String category_sell = "";
-    private int year_sell = -1;
+    @FXML
+    private Button searchButton;
+    @FXML
+    private Button moveButton;
     
-    private double selling_price=-1;*/
+         
     private int VID_toSell = -1;
     
     
@@ -119,7 +123,7 @@ public class Manager_TosellController implements Initializable {
     @FXML
     private void searchListByLCY(ActionEvent event)  {  
         alert_tosell.setVisible(false);
-        if( dropYears.getValue()==null  ) {
+        if( dropYears.getText().isEmpty()  ) {
             alert_tosell.setText("Please give year");
             alert_tosell.setVisible(true);
             return;
@@ -134,11 +138,16 @@ public class Manager_TosellController implements Initializable {
         ArrayList<Vehicle> list =  new ArrayList<Vehicle>();
         int boughtYear = -1;
 
-        
-    
         int year_sell=-1;
-        if( dropYears.getValue()!=null ) 
-            year_sell = Integer.parseInt(  dropYears.getValue().toString()  )  ;
+        if(  !dropYears.getText().isEmpty()) 
+            try{
+            year_sell = Integer.parseInt(   dropYears.getText().toString()  )  ;
+            
+            }catch(NumberFormatException ex){
+                return;
+            }
+        
+         
          
         String category_sell = "";
         String location_sell = "";
@@ -214,10 +223,17 @@ public class Manager_TosellController implements Initializable {
         }
     
     }
+    @FXML
+    private Pane dialogpane;
+    @FXML
+    private Button okbutton;
+    @FXML
+    private Button cancelbutton;
+    
     
     private void popDialog(String text){
-        Button okbutton = new Button("Yes");
-        Button cancelbutton = new Button("No");
+        
+         
         Stage dialogStage = new Stage();
         
         okbutton.setOnAction(new EventHandler<ActionEvent>() {
@@ -238,10 +254,9 @@ public class Manager_TosellController implements Initializable {
 
         
         dialogStage.initModality(Modality.WINDOW_MODAL);
-        
+     
         dialogStage.setScene(new Scene(VBoxBuilder.create().
-        children(new Text(text), okbutton,cancelbutton).
-        alignment(Pos.CENTER).padding(new Insets(5)).build()));
+                children(dialogpane).build()));
         dialogStage.show();
         
         
@@ -252,7 +267,7 @@ public class Manager_TosellController implements Initializable {
     private void setTable(ArrayList<Vehicle> list,TableView<Vehicle> table){
         
         TableColumn<Vehicle,String> VIDCol = new TableColumn<>("Vlicense");
-        VIDCol.setMinWidth(90);
+        VIDCol.setMinWidth(70);
         TableColumn<Vehicle,String> VtypeCol = new TableColumn<>("category");
         VtypeCol.setMinWidth(70); 
         TableColumn<Vehicle,String> typeCol = new TableColumn<>("Vtype_name");
@@ -260,7 +275,7 @@ public class Manager_TosellController implements Initializable {
         TableColumn<Vehicle,String> nameCol = new TableColumn<>("Vname");
         nameCol.setMinWidth(90); 
         TableColumn<Vehicle,String> LocationCol = new TableColumn<>("Branch_location");
-        LocationCol.setMinWidth(200);
+        LocationCol.setMinWidth(160);
         TableColumn<Vehicle,String> yearCol = new TableColumn<>("Year");
         yearCol.setMinWidth(70);
         TableColumn<Vehicle,String> priceCol = new TableColumn<>("initial_price");
@@ -305,20 +320,7 @@ public class Manager_TosellController implements Initializable {
  
     }
     
-      private void setYears(){
-        ObservableList<String> options = 
-        FXCollections.observableArrayList(
-        "10",
-        "9",
-        "8",
-        "7",
-        "6",
-        "5",
-        "4"
-		);
-        dropYears.setItems(options);   
-    
-    }
+     
     
     private void setLocation(ComboBox cmb){
         ArrayList<Branch> list = new ArrayList<Branch>();

@@ -29,7 +29,9 @@ public class Manager_VehicleController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }      @FXML
+        gotoPane(main_pane_tosell,"Manager_Tosell.fxml");   
+    }      
+    @FXML
     private Pane main_pane;
     @FXML
     private Pane main_pane_add;

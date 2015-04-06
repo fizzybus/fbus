@@ -70,8 +70,13 @@ public class Manager_AddController implements Initializable {
         if( dropVType_add.getValue()==null   ) return;
         dropCategory_add.getItems().clear();
         setCatelog( dropVType_add.getValue().toString()    ,dropCategory_add);
-     
+        alert_add.setVisible(false);
     }
+    @FXML
+    private void afterAdd(ActionEvent event) {
+        alert_add.setVisible(false);
+    }
+    
     
             
     @FXML

@@ -7,6 +7,7 @@ package crs;
 
 import crs.classes.Branch;
 import crs.classes.Price;
+import crs.classes.Rental;
 import crs.classes.User;
 import crs.classes.Vehicle;
 import java.sql.SQLException;
@@ -28,7 +29,8 @@ public class CRS extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("menu_clerk.fxml"));  
+        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/inc/screen1.css").toExternalForm());
         stage.setScene(scene);
@@ -98,7 +100,7 @@ public class CRS extends Application {
             vc.Vtype_name =record.get("category");
             vc.category =record.get("vtype_name"); 
             vc.Year = Integer.parseInt( record.get("year"));
-            vc.initial_price = Integer.parseInt( record.get("initial_price"));
+            vc.initial_price = Double.parseDouble(record.get("initial_price"));
             vc.forRentFlag = Integer.parseInt( record.get("forrentflag"));
             vc.status = Integer.parseInt( record.get("status"));
             vc.Branch_location = getBranchLocationById(vc.BranchID);
@@ -136,7 +138,7 @@ public class CRS extends Application {
             vc.Vtype_name =record.get("category");
             vc.category = record.get("vtype_name");
             vc.Year = Integer.parseInt( record.get("year"));
-            vc.initial_price = Integer.parseInt( record.get("initial_price"));
+            vc.initial_price = Double.parseDouble( record.get("initial_price"));
             vc.forRentFlag = Integer.parseInt( record.get("forrentflag"));
             vc.status = Integer.parseInt( record.get("status"));
             vc.Branch_location = getBranchLocationById(vc.BranchID);          
@@ -154,7 +156,7 @@ public class CRS extends Application {
         ArrayList<Vehicle> result = new ArrayList<Vehicle>();
         
         ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
-        String sql = "SELECT * FROM Vehicle WHERE forRentFlag=1 AND Year<"+year+" ";
+        String sql = "SELECT * FROM Vehicle WHERE forRentFlag=1 AND Year<="+year+" ";
         if( vtypename=="" && locationid<=0 ){
             //both not set
             System.out.println("only year set year:"+year);
@@ -299,46 +301,66 @@ public class CRS extends Application {
     
     /*****vicky**********/
     public static int addUser(User user){
-        return 0;
-        //to finish
+            
+        int count = 0;           
+        count = dbc.itemInsert("INSERT INTO employees (Emp_name, Username, Password,Type ) VALUES ('"
+               +user.emp_name+"','"+user.username+"','"+user.password+"','"+user.type+"')"); 
+        //System.out.println("name"+user.emp_name+" "+user.username+" "+user.password+" "+user.type);
+        return count;
     }
     
     /*****vicky**********/
-    public static ArrayList<User> getUserList(String type){
-        return null;
-        //to finish
+    public static ArrayList<User> getUserList(){
+        ArrayList<User> result = new ArrayList<User>();
+        ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
+        data = dbc.getResult("SELECT *  FROM employees");
+        //data = dbc.getResult("SELECT Type FROM price WHERE VType = '"+vtype+"'");
+        for( HashMap<String, String> record : data ){
+            User user = new User(); 
+            user.emp_id = Integer.parseInt( record.get("emp_id") ) ;
+            user.emp_name = record.get("emp_name");
+            user.password = record.get("password");
+            user.username = record.get("username");
+            user.type = record.get("type");           
+            result.add(user);           
+        }
+        return result;
     }
     
     
     /*****vicky**********/
     public static int updateUser(User user){
-        return 0;
-    
-    
-    //to finish
+        int count =  dbc.itemUpdate("UPDATE employees SET password = '"+user.password
+                +"' WHERE Emp_id = "+user.emp_id);
+        return count;
     }
     
-   public static ArrayList<Vehicle> getDailyRental(String vtypename,int locationid,int year){
+    public static int removeUser(int userid){
+        int count =  dbc.itemUpdate("Delete from employees where Emp_id ="+userid);
+        return count;
+    }
+    
+    public static String getValidation(User user){
+        
+        return "";
+    
+    }
+    
+    /**********************rental***********************************/
+    
+   public static ArrayList<Vehicle> getDailyRental(String date,int loc){
         
         ArrayList<Vehicle> result = new ArrayList<Vehicle>();
         
         ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
-        String sql = "SELECT branchid,COUNT(*) FROM `rentalagreement` A,`vehicle` B WHERE A.`Vlicense` = B.`Vlicense`  AND DATE(Pickup_time)='2015-01-02'   GROUP BY branchid,vtype_name";
-            String sql2 = "SELECT A.`Vlicense`vlicense,branchid,vtype_name,DATE(Pickup_time) FROM `rentalagreement` A,`vehicle` B  WHERE A.`Vlicense` = B.`Vlicense`  AND DATE(Pickup_time)='2015-01-02'  GROUP BY branchid,vtype_name";
-        if( vtypename=="" && locationid<=0 ){
-            //both not set
-            System.out.println("only year set year:"+year);
-        }else if(  vtypename!="" && locationid>0   ){
-            //both set
-            sql += " AND BranchID="+locationid+" AND vtype_name='"+vtypename+"'";
-        }else if(  vtypename=="" && locationid>0   ){
-            //only location set
-            sql += " AND BranchID="+locationid;
-        }else if(  vtypename!="" && locationid<=0   ){
-            //only category set
-            sql += " AND Vtype_name='"+vtypename+"'";            
+        String sql = "";
+        if(loc<0){
+            sql ="SELECT branchid,A.`Vlicense`,vname,vtype_name,category FROM `rentalagreement` A,`vehicle` B WHERE A.`Vlicense` = B.`Vlicense`  AND DATE(Pickup_time)='"
+                +date+"'   GROUP BY branchid,vtype_name";
+        }else{
+             sql ="SELECT A.`Vlicense`,vname,vtype_name,category FROM `rentalagreement` A,`vehicle` B WHERE A.`Vlicense` = B.`Vlicense`  AND DATE(Pickup_time)='"
+                +date+"' AND B.`BranchID`="+loc+"   GROUP BY vtype_name";
         }
-        sql += "  ORDER BY vtype_name,category,branchid";
         data = dbc.getResult(sql);
         for( HashMap<String, String> record : data ){
             Vehicle vc = new Vehicle(); 
@@ -346,11 +368,7 @@ public class CRS extends Application {
             vc.Vname = record.get("vname");       
             vc.Vtype_name = record.get("category");
             vc.category = record.get("vtype_name");
-            vc.initial_price = Double.parseDouble( record.get("initial_price") );
-            vc.BranchID = Integer.parseInt( record.get("branchid"));    
-            vc.status = Integer.parseInt( record.get("status"));
-            vc.Year = Integer.parseInt( record.get("year"));
-            vc.forRentFlag = Integer.parseInt( record.get("forrentflag")); 
+            if(loc<0)  vc.BranchID = Integer.parseInt( record.get("branchid"));    
             vc.Branch_location = getBranchLocationById(vc.BranchID);
             result.add(vc);
             
@@ -360,6 +378,147 @@ public class CRS extends Application {
         return result;  
     
     }
+   
+   
+     
+   public static HashMap<String, Integer> getDailyRentalByCategory(String date){
+        HashMap<String, Integer>  result = new HashMap<String, Integer> ();  
+       
+        ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
+        String sql = "SELECT vtype_name,COUNT(*) AS number FROM `rentalagreement` A,`vehicle` B  WHERE A.`Vlicense` = B.`Vlicense`  AND DATE(Pickup_time)='"
+                +date+"'  GROUP BY vtype_name";
+        data = dbc.getResult(sql);
+        for( HashMap<String, String> record : data ){
+            String category = record.get("vtype_name");
+            int number = Integer.parseInt( record.get("number") ) ;
+            result.put(category, number);            
+        }
+        
+        
+       return result;
+   }
+   
+      public static ArrayList<Rental> getDailyRentalByBranch(String date){
+        ArrayList<Rental> result = new ArrayList<Rental>();  
+       
+        ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
+        
+        String sql = "SELECT branchid,COUNT(*) AS number FROM `rentalagreement` A,`vehicle` B  WHERE A.`Vlicense` = B.`Vlicense`  AND DATE(Pickup_time)='"+
+                date+"'  GROUP BY branchid";
+        data = dbc.getResult(sql);
+        for( HashMap<String, String> record : data ){
+            Rental rental = new Rental();
+            rental.branchLoc = getBranchLocationById( Integer.parseInt( record.get("branchid")  ) );
+            rental.number =   Integer.parseInt( record.get("number"));
+            result.add(rental);
+        }
+        
+        
+       return result;
+   }
+   
+   
+        public static ArrayList<Rental> getRentalByCategory(String date){
+        ArrayList<Rental> result = new ArrayList<Rental>();  
+       
+        ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
+        String sql = "SELECT B.`Vtype_name`,COUNT(*) AS number FROM `rentalagreement` A,`vehicle` B  WHERE A.`Vlicense` = B.`Vlicense`  AND DATE(Pickup_time)='"+
+                date+"'  GROUP BY B.`Vtype_name`";
+        data = dbc.getResult(sql);
+        for( HashMap<String, String> record : data ){
+            Rental rental = new Rental();
+            rental.typename = record.get("vtype_name")   ;
+            rental.number =   Integer.parseInt( record.get("number"));
+            result.add(rental);
+        }
+        
+        
+       return result;
+   }
+      
+      
+   
+   
+   
+   
+   
+   /****************************return***********************/
+   
+   public static ArrayList<Vehicle> getDailyReturn(String date,int loc){
+        
+        ArrayList<Vehicle> result = new ArrayList<Vehicle>();
+        
+        ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
+        String sql = "";
+        if(loc<0){
+            sql ="SELECT A.`Vlicense`,B.`BranchID`,vname,vtype_name,category,C.`Cost`  FROM `rentalagreement` A,`vehicle` B ,`returnvehicle` C  WHERE A.`Vlicense` = B.`Vlicense`  AND c.`RentId`=A.`RentId`   AND DATE(C.`Dropoff_time`)='"
+                    +date+"'   GROUP BY vtype_name,B.`BranchID`";
+        }else{
+             sql ="SELECT A.`Vlicense`,vname,vtype_name,category,C.`Cost`  FROM `rentalagreement` A,`vehicle` B ,`returnvehicle` C  WHERE A.`Vlicense` = B.`Vlicense`  AND c.`RentId`=A.`RentId`   AND DATE(C.`Dropoff_time`)='"
+                    +date+"' AND B.`BranchID`="+loc+"  GROUP BY vtype_name";
+        }
+        data = dbc.getResult(sql);
+        for( HashMap<String, String> record : data ){
+            Vehicle vc = new Vehicle(); 
+            vc.Vlicense = Integer.parseInt( record.get("vlicense") ) ;
+            vc.Vname = record.get("vname");       
+            vc.Vtype_name = record.get("category");
+            vc.category = record.get("vtype_name");
+            if(loc<0)  vc.BranchID = Integer.parseInt( record.get("branchid"));    
+            vc.Branch_location = getBranchLocationById(vc.BranchID);
+            vc.initial_price = Double.parseDouble(  record.get("cost") );
+            result.add(vc);
+            
+        }
+        
+        
+        return result;  
+    
+    }
+   
+   
+ 
+      public static ArrayList<Rental> getDailyReturnByBranch(String date){
+        ArrayList<Rental> result = new ArrayList<Rental>();  
+       
+        ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
+        
+        String sql = "SELECT branchid,COUNT(*) AS number, SUM(C.`Cost`) AS cost FROM `rentalagreement` A,`vehicle` B ,`returnvehicle` C  WHERE A.`Vlicense` = B.`Vlicense`  AND C.`RentId` = A.`RentId` AND DATE(C.`Dropoff_time`)='"
+                +date+"'  GROUP BY branchid";
+        data = dbc.getResult(sql);
+        for( HashMap<String, String> record : data ){
+            Rental rental = new Rental();
+            rental.branchLoc = getBranchLocationById( Integer.parseInt( record.get("branchid")  ) );
+            rental.number =   Integer.parseInt( record.get("number"));
+            rental.amount = Double.parseDouble(record.get("cost"));
+            result.add(rental);
+        }
+        
+        
+       return result;
+   }
+      
+          public static ArrayList<Rental> getReturnByCategory(String date){
+        ArrayList<Rental> result = new ArrayList<Rental>();  
+       
+        ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
+        
+        String sql = "SELECT B.`Vtype_name`,COUNT(*) AS number, SUM(C.`Cost`) AS cost FROM `rentalagreement` A,`vehicle` B ,`returnvehicle` C  WHERE A.`Vlicense` = B.`Vlicense`  AND C.`RentId` = A.`RentId` AND DATE(C.`Dropoff_time`)='"
+                +date+"'  GROUP BY B.`Vtype_name`";
+        data = dbc.getResult(sql);
+        for( HashMap<String, String> record : data ){
+            Rental rental = new Rental();
+            rental.typename = record.get("vtype_name");
+            rental.number =   Integer.parseInt( record.get("number"));
+            rental.amount = Double.parseDouble(record.get("cost"));
+            result.add(rental);
+        }
+        
+        
+       return result;
+   }  
+      
+
     
        
 }

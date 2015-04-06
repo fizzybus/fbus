@@ -20,10 +20,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.chart.BarChart;
+import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.DirectoryChooserBuilder;
 import javafx.stage.FileChooser;
@@ -40,66 +44,69 @@ public class Manager_ReportController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        gotoPane(pane_daily,"Manager_Report_Daily.fxml");
         
     }    
     
     
+     @FXML
+    private Pane main_pane;
     @FXML
-    private void onReport(ActionEvent event){
-                DirectoryChooserBuilder builder = DirectoryChooserBuilder.create();
-                builder.title("Hello World");
-                String cwd = System.getProperty("user.dir");
-                File file = new File(cwd);
-                builder.initialDirectory(file);
-                DirectoryChooser chooser = builder.build();
-                File chosenDir = chooser.showDialog(null);
-                if (chosenDir != null) {
-                  System.out.println(chosenDir.getAbsolutePath());
-                } else {
-                 System.out.print("no directory chosen");
-                }
-        
-                
-                
-        Document document = new Document();
-        try {
-            PdfWriter.getInstance(document, new FileOutputStream(chosenDir.getAbsolutePath()+"/report322.pdf"));
-          
-            document.open();
-            Paragraph paragraph = new Paragraph();
-            paragraph.add("update content");
-            document.add(paragraph);
-            document.add(createTable());
-            document.close();
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Manager_ReportController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (DocumentException ex) {
-            Logger.getLogger(Manager_ReportController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-
-        
+    private Pane pane_daily;
+    @FXML
+    private Pane pane_daily_bybranch;
+    @FXML
+    private Pane pane_dailyreturn;
+    @FXML
+    private Pane pane_dailyreturn_bybranch;
+    
+    
+    @FXML
+    private Pane main_pane_sold;
+   
+    
+    
+    
+     @FXML
+    private void gotoDaily(ActionEvent event)  {  
+        gotoPane(pane_daily,"Manager_Report_Daily.fxml");
     }
     
-    private static PdfPTable createTable(){
+    @FXML
+    private void gotoDailyBybranch(ActionEvent event) {
+        gotoPane(pane_daily_bybranch,"Manager_Report_bybranch.fxml");       
+       
+    }
     
-     PdfPTable table = new PdfPTable(3);
-        // the cell object
-        PdfPCell cell;
-        // we add a cell with colspan 3
-        cell = new PdfPCell(new Phrase("Cell with colspan 3"));
-        cell.setColspan(3);
-        table.addCell(cell);
-        // now we add a cell with rowspan 2
-        cell = new PdfPCell(new Phrase("Cell with rowspan 2"));
-        cell.setRowspan(2);
-        table.addCell(cell);
-        // we add the four remaining cells with addCell()
-        table.addCell("row 1; cell 1");
-        table.addCell("row 1; cell 2");
-        table.addCell("row 2; cell 1");
-        table.addCell("row 2; cell 2");
-        return table;
+    @FXML
+    private void gotoReturn(ActionEvent event) {
+      gotoPane(pane_dailyreturn,"Manager_DailyReturn.fxml");
+    }
+    @FXML
+    private void gotoReturnBybranch(ActionEvent event) {
+      gotoPane(pane_dailyreturn_bybranch,"Manager_Returnbybranch.fxml");
+    }
+
+    
+    private void gotoPane(Pane gotoPane,String fxml){
+        try {
+           
+           main_pane.getChildren().remove(pane_daily);
+           main_pane.getChildren().remove(pane_daily_bybranch);
+           main_pane.getChildren().remove(pane_dailyreturn);
+           main_pane.getChildren().remove(pane_dailyreturn_bybranch);
+           
+           
+           
+           gotoPane.getChildren().add( FXMLLoader.load( getClass().getResource(fxml) )   );    
+           gotoPane.setLayoutX(0);
+           gotoPane.setLayoutY(0);     
+           main_pane.getChildren().add( gotoPane );  
+           
+        } catch (IOException ex) {
+            Logger.getLogger(Manager_ReportController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
     }
     
     

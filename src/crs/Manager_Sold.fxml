@@ -6,20 +6,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" prefHeight="485.0" prefWidth="743.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Manager_SoldController">
+<AnchorPane id="AnchorPane" prefHeight="494.0" prefWidth="866.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Manager_SoldController">
   <children>
-    <Pane id="soldPane" layoutX="0.0" layoutY="0.0" prefHeight="446.0" prefWidth="701.0">
+    <Pane id="soldPane" layoutX="0.0" layoutY="0.0" prefHeight="485.0" prefWidth="852.0">
       <children>
-        <Button layoutX="415.0" layoutY="312.0" mnemonicParsing="false" onAction="#onSoldTo" text="Sold" />
-        <TableView fx:id="SoldTable" layoutX="14.0" layoutY="14.0" prefHeight="242.00009999999747" prefWidth="641.0" />
-        <TextField fx:id="input_sold_price" layoutX="133.0" layoutY="268.0" prefWidth="184.0" />
-        <TextField fx:id="input_sold_date" layoutX="133.0" layoutY="301.0" prefWidth="184.0" />
-        <TextField fx:id="input_sold_soldto" layoutX="415.0" layoutY="271.0" prefWidth="169.0" />
-        <Label layoutX="95.0" layoutY="271.0" text="Price" />
-        <Label layoutX="377.0" layoutY="271.0" text="soldto" />
+        <Button fx:id="soldButton" layoutX="630.0" layoutY="164.0" mnemonicParsing="false" onAction="#onSoldTo" text="Sold" />
+        <TableView fx:id="SoldTable" layoutX="14.0" layoutY="14.0" prefHeight="308.0000999999975" prefWidth="511.0" />
+        <TextField fx:id="input_sold_price" layoutX="616.0" layoutY="44.0" prefWidth="142.0" />
+        <TextField fx:id="input_sold_date" layoutX="616.0" layoutY="86.0" prefWidth="142.0" />
+        <TextField fx:id="input_sold_soldto" layoutX="616.0" layoutY="126.0" prefWidth="142.0" />
+        <Label layoutX="578.0" layoutY="47.0" text="Price" />
+        <Label layoutX="574.0" layoutY="126.0" text="soldto" />
         <DatePicker fx:id="sold_datepicker" layoutX="133.0" layoutY="301.0" />
         <Label fx:id="alert_sold" layoutX="471.0" layoutY="387.0" text="Label" visible="false" />
-        <Label id="alert_sold" layoutX="74.0" layoutY="301.0" text="sold date" />
+        <Label id="alert_sold" layoutX="557.0" layoutY="86.0" text="sold date" />
       </children>
     </Pane>
   </children>

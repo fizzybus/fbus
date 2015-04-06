@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="419.0" prefWidth="703.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Admin_manageuserController">
+  <children>
+    <TableView fx:id="table_user" layoutX="66.0" layoutY="31.0" prefHeight="279.0" prefWidth="353.0" />
+    <Button fx:id="resetButton" layoutX="524.0" layoutY="189.0" mnemonicParsing="false" onAction="#onSetpw" text="reset" />
+    <TextField fx:id="newpassword" layoutX="460.0" layoutY="146.0" prefWidth="173.0" />
+    <Button fx:id="removeButton" layoutX="212.0" layoutY="330.0" mnemonicParsing="false" onAction="#onRemove" text="remove" />
+    <Label fx:id="result1" layoutX="539.0" layoutY="194.0" text="Label" visible="false" />
+    <Label fx:id="result2" layoutX="374.0" layoutY="315.0" text="Label" visible="false" />
+    <Label layoutX="460.0" layoutY="125.0" text="reset password" />
+  </children>
+</AnchorPane>

@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -39,6 +40,10 @@ public class Manager_SoldController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
         updateSoldTable();
+      sold_datepicker.setLayoutX( input_sold_date.getLayoutX() );
+      sold_datepicker.setLayoutY( input_sold_date.getLayoutY() );
+            alert_sold.setLayoutX( soldButton.getLayoutX()+50  );
+            alert_sold.setLayoutY( soldButton.getLayoutY()  );
     }    
       @FXML
     private Pane soldPane;
@@ -57,7 +62,8 @@ public class Manager_SoldController implements Initializable {
     private TextField input_sold_date;
     @FXML
     private DatePicker sold_datepicker;
-    
+    @FXML
+    private Button soldButton;
     
     private int VID_toSell = -1;
       
@@ -79,7 +85,7 @@ public class Manager_SoldController implements Initializable {
             return;
         
         }
-        if(  sold_datepicker.getValue()==null ){
+        if(  sold_datepicker.getValue()==null ){ 
             alert_sold.setText("date not set");
             alert_sold.setVisible(true);
             return;        
@@ -88,12 +94,12 @@ public class Manager_SoldController implements Initializable {
         double price = 0;
         try{
           price = Double.parseDouble( input_sold_price.getText()   );
-          if(price<=0){
+          if(price<=0){ 
               alert_sold.setText("price not valid");
               alert_sold.setVisible(true);
               return;
           }
-        } catch(NumberFormatException ex){
+        } catch(NumberFormatException ex){ 
             alert_sold.setText("price not valid");
             alert_sold.setVisible(true);
             return;
@@ -104,9 +110,9 @@ public class Manager_SoldController implements Initializable {
         int count =  CRS.setSold(VID_toSell, date, price, soldto);
         System.out.println("count="+count);
         if(count>=1){        
-            alert_sold.setText("sold successfully");
+            alert_sold.setText("sold successfully"); 
             alert_sold.setVisible(true);
-            sold_datepicker.setValue(LocalDate.MIN);
+            sold_datepicker.setValue(null);
             input_sold_soldto.setText("");
             input_sold_price.setText("");
         }
@@ -136,7 +142,7 @@ public class Manager_SoldController implements Initializable {
       private void setTable(ArrayList<Vehicle> list,TableView<Vehicle> table){
         
         TableColumn<Vehicle,String> VIDCol = new TableColumn<>("Vlicense");
-        VIDCol.setMinWidth(90);
+        VIDCol.setMinWidth(70);
         TableColumn<Vehicle,String> VtypeCol = new TableColumn<>("category");
         VtypeCol.setMinWidth(70); 
         TableColumn<Vehicle,String> typeCol = new TableColumn<>("Vtype_name");
@@ -144,7 +150,7 @@ public class Manager_SoldController implements Initializable {
         TableColumn<Vehicle,String> nameCol = new TableColumn<>("Vname");
         nameCol.setMinWidth(90); 
         TableColumn<Vehicle,String> LocationCol = new TableColumn<>("Branch_location");
-        LocationCol.setMinWidth(200);
+        LocationCol.setMinWidth(160);
         TableColumn<Vehicle,String> yearCol = new TableColumn<>("Year");
         yearCol.setMinWidth(70);
         TableColumn<Vehicle,String> priceCol = new TableColumn<>("initial_price");
