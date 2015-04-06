@@ -112,6 +112,23 @@ public class BookCarController implements Initializable {
     }
     
     @FXML
+    private void Reset() {
+        customername.setText(" ");
+        digset1.setText(" ");
+        digset2.setText(" ");
+        digset3.setText(" ");
+        if(trans_status==1) {
+            license.setText(" ");
+            creditcardnumber.setText(" ");
+        }
+        customer_indatabase.setText(" ");
+        message_custinfo.setText(" ");
+        location_label.setText(" ");
+        date_label.setText(" ");
+        estimated_cost.setText(" ");
+    }
+    
+    @FXML
     private void Toggle(ActionEvent event) {
         
         if( togglecombo.getValue()=="Reservation") { 
