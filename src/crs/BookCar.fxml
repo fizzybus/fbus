@@ -109,7 +109,7 @@
                   </Label>
                   <Button layoutX="21.0" layoutY="161.0" mnemonicParsing="false" onAction="#CalculateEstimatedCost" prefHeight="31.0" prefWidth="133.0" text="Estimated Cost" />
                   <Button fx:id="pop_confirmation_button" layoutX="107.0" layoutY="289.0" mnemonicParsing="false" onAction="#Load_Confirmation" prefHeight="31.0" prefWidth="135.0" text="Continue" />
-                  <Button layoutX="107.0" layoutY="327.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="135.0" text="Cancel" />
+                  <Button layoutX="107.0" layoutY="327.0" mnemonicParsing="false" onAction="#Reset" prefHeight="31.0" prefWidth="135.0" text="Cancel" />
                   <Label fx:id="estimated_cost" layoutX="46.0" layoutY="201.0" prefHeight="21.0" prefWidth="208.0">
                      <font>
                         <Font size="12.0" />
