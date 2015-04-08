@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.collections.*?>
@@ -8,12 +9,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane id="AnchorPane" minHeight="448.0" prefHeight="484.0" prefWidth="687.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="crs.Manager_Report_bybranchController">
+<AnchorPane id="AnchorPane" minHeight="415.0" prefHeight="415.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="crs.Manager_Report_bybranchController">
   <children>
-    <DatePicker fx:id="report_datepicker" layoutX="80.0" layoutY="50.0" onAction="#onChangeDate" />
-    <TableView fx:id="table_vehicle" layoutX="90.0" layoutY="168.0" prefHeight="205.0" prefWidth="495.0" />
-    <Button layoutX="333.0" layoutY="87.0" mnemonicParsing="false" onAction="#onDownload" text="Download report" />
-    <ComboBox fx:id="combo_loc" layoutX="291.0" layoutY="49.0" prefHeight="21.0" prefWidth="141.0" promptText="Branch Location">
+    <DatePicker fx:id="report_datepicker" layoutX="80.0" layoutY="26.0" onAction="#onChangeDate" />
+    <TableView fx:id="table_vehicle" layoutX="85.0" layoutY="168.0" prefHeight="221.0" prefWidth="495.0" />
+    <Button layoutX="332.0" layoutY="74.0" mnemonicParsing="false" onAction="#onDownload" prefHeight="31.0" prefWidth="165.0" text="Download report" />
+    <ComboBox fx:id="combo_loc" layoutX="329.0" layoutY="26.0" prefHeight="31.0" prefWidth="171.0" promptText="Branch Location">
       <items>
         <FXCollections fx:factory="observableArrayList">
           <String fx:value="Item 1" />
@@ -30,10 +31,13 @@
         <NumberAxis side="LEFT" />
       </yAxis>
     </BarChart>
-    <Button layoutX="90.0" layoutY="87.0" mnemonicParsing="false" onAction="#onView" text="View list" />
-    <Button layoutX="200.0" layoutY="87.0" mnemonicParsing="false" onAction="#onSummary" text="View Summary" />
-    <Label layoutX="95.0" layoutY="135.0" text="Total" />
-    <TextField fx:id="totalField" editable="false" layoutX="151.0" layoutY="129.0" prefWidth="154.0" />
+    <Button layoutX="79.0" layoutY="74.0" mnemonicParsing="false" onAction="#onView" prefHeight="31.0" prefWidth="92.0" text="View list" />
+    <Button layoutX="179.0" layoutY="74.0" mnemonicParsing="false" onAction="#onSummary" text="View Summary" />
+    <Label layoutX="94.0" layoutY="132.0" text="Total" textFill="#4a4545">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+    <TextField fx:id="totalField" editable="false" layoutX="159.0" layoutY="127.0" prefHeight="31.0" prefWidth="144.0" />
     <Pane fx:id="pane_summary" layoutX="79.0" layoutY="168.0" prefHeight="200.0" prefWidth="200.0" visible="false">
       <children>
         <TableView fx:id="table_bycategory" layoutX="7.0" layoutY="0.0" prefHeight="200.0" prefWidth="200.0" />

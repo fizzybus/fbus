@@ -9,16 +9,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="413.0" prefWidth="1057.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="crs.ManageCustomerController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="413.0" prefWidth="1057.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="crs.ManageCustomerController">
    <children>
       <Separator layoutX="390.0" layoutY="49.0" orientation="VERTICAL" prefHeight="303.0" prefWidth="4.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffb71e" height="200.0" layoutY="76.0" stroke="WHITE" strokeType="INSIDE" width="26.0" />
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#ffb71e" height="200.0" layoutX="1031.0" layoutY="76.0" stroke="WHITE" strokeType="INSIDE" width="26.0" />
-      <Button layoutX="142.0" layoutY="113.0" mnemonicParsing="false" onAction="#LoadRegisterCustomer" style="-fx-background-color: #fbfbfb;" text="Register Customer">
+      <Button layoutX="142.0" layoutY="113.0" mnemonicParsing="false" onAction="#LoadRegisterCustomer" style="-fx-background-color: #fbfbfb; -fx-border-color: #F8F8F8;" styleClass="menu-side-bar" text="Register Customer">
          <font>
             <Font name="System Bold" size="15.0" />
          </font></Button>
-      <Button layoutX="146.0" layoutY="217.0" mnemonicParsing="false" onAction="#LoadClubMember" prefHeight="31.0" prefWidth="142.0" style="-fx-background-color: #fbfbfb;" text="Club Member">
+      <Button layoutX="146.0" layoutY="217.0" mnemonicParsing="false" onAction="#LoadClubMember" prefHeight="31.0" prefWidth="142.0" style="-fx-background-color: #fbfbfb; -fx-border-color: #F8F8F8;" styleClass="menu-side-bar" text="Club Member">
          <font>
             <Font name="System Bold" size="15.0" />
          </font></Button>

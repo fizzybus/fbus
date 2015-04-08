@@ -10,6 +10,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class RentViaReservationController implements Initializable {
     private Integer Confno;
     private Integer selection; // Did the user selcted phone or give confirmation number (phone =0) (Confirmation =1)
     private String customer_phone;
-    private Boolean valid_confirmation_number;
+    private Boolean valid_confirmation_number=false;
     final private String user= "root";
     final private String pass= "";
     /**
@@ -58,6 +59,7 @@ public class RentViaReservationController implements Initializable {
          else {ds1.setText(""); ds2.setText(""); ds3.setText("");}
          License_no.setText("");
         Creditcardnumber.setText("");
+        message.setText(" ");
     }
     @FXML public void Toggle() {
         if("Phone"==phone_confno.getValue()) {
@@ -99,55 +101,81 @@ public class RentViaReservationController implements Initializable {
        ListReservationsController controller = loader.getController();
        controller.setInfo(customer_phone);        
        stage.showAndWait();
-      Confno = controller.ConfNo();   
-      valid_confirmation_number= true;
+       Confno = controller.ConfNo(); 
+       if(Confno==null) {message.setText("Please select a reservation .."); valid_confirmation_number= false;}
+       else valid_confirmation_number= true;
+           
+      
         }
     }
     
     @FXML 
-    public void Proceed() {
+    public void Proceed() throws SQLException {
         Integer Vlicense;
         Integer Dlicense=0;
         Integer CardNumber=0;
         String Pickup_time,Dropoff_time;
         Integer Odometer;
         
-        Boolean valid_Dlicense=true,valid_CardNumber=true;
+        Boolean valid_Dlicense=true,valid_CardNumber=true,isValidExpiryDate=true;
         /* Vailate License Number */
-        try   {Dlicense = Integer.parseInt((String)License_no.getText());message.setText("");}
+        try   {Dlicense = Integer.parseInt((String)License_no.getText());}
         catch (NumberFormatException e) {message.setText("Enter valid license");valid_Dlicense=false;}
         
         /* Vailate Credit Card Number */
-        try   {CardNumber = Integer.parseInt((String)Creditcardnumber.getText());message.setText("");}
-        catch (NumberFormatException e) {message.setText("Enter card number");valid_CardNumber=false;}
+        try   {CardNumber = Integer.parseInt((String)Creditcardnumber.getText());}
+        catch (NumberFormatException e) {message.setText("Invalid card number");valid_CardNumber=false;}
         
         if(selection==1) {
-            try   {Confno = Integer.parseInt((String)confirmation_number.getText());message.setText(""); valid_confirmation_number=true;}
+            try   {Confno = Integer.parseInt((String)confirmation_number.getText()); valid_confirmation_number=true;}
         catch (NumberFormatException e) {message.setText("Invalid confrimation");valid_confirmation_number=false;}
         }
         
+        if(null==expirydate.getValue())
+        {isValidExpiryDate = false; message.setText(" Select Expiry Date ..");}
         
-        if(valid_Dlicense && valid_CardNumber && valid_confirmation_number)  {
-            try {
+        if(!valid_confirmation_number) message.setText("Select reservation record ..");
+        
+        if(valid_Dlicense && valid_CardNumber && valid_confirmation_number && isValidExpiryDate)  {
+            
                 Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
                 Statement myStmt = myConn.createStatement();
                 ResultSet myRs = myStmt.executeQuery("select * from reservation where Confno="+Confno+"");
-                myRs.next();
-                Vlicense = myRs.getInt("Vlicense");
-                if(selection==1) customer_phone = myRs.getString("Phone_number");
-                Pickup_time = myRs.getString("Pickup_time");
-                Dropoff_time = myRs.getString("Dropoff_time");
-                myRs = myStmt.executeQuery("select odometer from vehicle where Vlicense="+Vlicense+"");
-                myRs.next();
-                Odometer = myRs.getInt("odometer");
+              
+                int count=0;
+                while(myRs.next()) {count++;}
+                if(count==0) message.setText("No reservation record exits ...");
+                else {
+                    myRs.previous();
+                    Vlicense = myRs.getInt("Vlicense");
+                    if(selection==1) customer_phone = myRs.getString("Phone_number");
+                    Pickup_time = myRs.getString("Pickup_time");
+                    Dropoff_time = myRs.getString("Dropoff_time");
+                    myRs = myStmt.executeQuery("select odometer from vehicle where Vlicense="+Vlicense+"");
+                    myRs.next();
+                    Odometer = myRs.getInt("odometer");
+
+                   myRs = myStmt.executeQuery("select * FROM rentalagreement WHERE ConfNo="+Confno);
+                   count=0;
+                   while(myRs.next()) {count++;}
+                    if(count==0) {
+                        String sql = "INSERT INTO rentalagreement (ConfNo,Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Dlicense) " +
+                                 "VALUES ("+Confno+",'"+customer_phone+"',"+Vlicense+","+CardNumber+",'"+expirydate.getValue()+"','"+(String)cardtype.getValue()+"',"+Odometer+",'"+Pickup_time+"','"+Dropoff_time+"',"+Dlicense+")";
+                        myStmt.executeUpdate(sql);
+
+                        myRs = myStmt.executeQuery("select MAX(RentId) AS Latest_Entry FROM rentalagreement");
+                        myRs.next();
+                        Integer latest_entry_number = myRs.getInt("Latest_Entry");
+                        message.setText("Rental Id : "+latest_entry_number.toString());
+                    }
+                    else 
+                    { message.setText("Rental Agreement already exists ..." );
+                }
                 
-                String sql = "INSERT INTO rentalagreement (ConfNo,Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Dlicense) " +
-                         "VALUES ("+Confno+",'"+customer_phone+"',"+Vlicense+","+CardNumber+",'"+expirydate.getValue()+"','"+(String)cardtype.getValue()+"',"+Odometer+",'"+Pickup_time+"','"+Dropoff_time+"',"+Dlicense+")";
-                myStmt.executeUpdate(sql);
-                message.setText("Rental Agreement completed");
+                
+                
             } 
-            catch (Exception exc) 
-                {exc.printStackTrace();}  
+            
         }
         
     }

@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package crs;
 
 import crs.classes.Branch;
@@ -31,7 +26,6 @@ public class CRS extends Application {
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
         
-        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));  
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/inc/screen1.css").toExternalForm());
         stage.setScene(scene);

@@ -55,5 +55,6 @@
           <Button layoutX="273.0" layoutY="4.0" mnemonicParsing="false" onAction="#LoadManageVehicle" style="-fx-background-color: white; -fx-border-color: white;" styleClass="button-menu-bar" text="Manage Vehicle" />
          </children>
       </Pane>
+      <Button layoutX="771.0" layoutY="50.0" mnemonicParsing="false" onAction="#LoadUser" style="-fx-background-color: white; -fx-border-color: white;" styleClass="button-menu-bar" text="Manage User" />
   </children>
 </Pane>

@@ -5,11 +5,13 @@
  */
 package crs;
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,18 +81,28 @@ public class CancelReservationController implements Initializable {
             }
             catch (NumberFormatException e) {message.setText("Invalid Phone Number"); isvalid_phone = false;}
             
-            if(isvalid_phone) { 
-                
-                String customer_phone = ds1.getText()+"-"+ds2.getText()+"-"+ds3.getText();  
-                String sql = "DELETE FROM reservation WHERE Phone_number='"+customer_phone+"' and DATE(Pickup_time)='"+from.getValue() +"' and DATE(Dropoff_time)='"+to.getValue() +"'";
-                System.out.println(sql);
-                int row = myStmt.executeUpdate(sql);
-                if(row ==1)
-                    message.setText("Reservation cancelled");
-                else
-                    message.setText("No record to delete");
-            }
- 
+            if(  (null!=from.getValue()) && (null!=to.getValue())   ) {
+                if(isvalid_phone) { 
+
+                    String customer_phone = ds1.getText()+"-"+ds2.getText()+"-"+ds3.getText();  
+                    String sql = "DELETE FROM reservation WHERE Phone_number='"+customer_phone+"' and DATE(Pickup_time)='"+from.getValue() +"' and DATE(Dropoff_time)='"+to.getValue() +"'";
+                    System.out.println(sql);
+                    
+                    try {
+                    int row = myStmt.executeUpdate(sql);
+                    if(row ==1)
+                        message.setText("Reservation cancelled");
+                    else
+                        message.setText("No record to delete");
+                    } catch (SQLIntegrityConstraintViolationException | MySQLIntegrityConstraintViolationException ex) { 
+                        message.setText("RentalAgreemnt exists,can't cancel");
+                        
+                    } 
+                    
+                    
+                    
+                }
+            } else {message.setText("From or To Datetime missing");}
        }
        else {
             Integer confirmation=0;
@@ -104,11 +116,14 @@ public class CancelReservationController implements Initializable {
             if(isvalid_confirmation)  {
                 
                 String sql = "DELETE FROM reservation WHERE Confno='"+confirmation+"'";
-                int row = myStmt.executeUpdate(sql);
-                if(row ==1)
-                    message.setText("Reservation cancelled");
-                else
-                    message.setText("No record to delete");
+                try {
+                    int row = myStmt.executeUpdate(sql);
+                    if(row ==1)
+                        message.setText("Reservation cancelled");
+                    else
+                        message.setText("No record to delete");
+                    } catch (SQLIntegrityConstraintViolationException | MySQLIntegrityConstraintViolationException ex) {message.setText("RentalAgreemnt exists,can't cancel");
+                      } 
                 
                 
             }

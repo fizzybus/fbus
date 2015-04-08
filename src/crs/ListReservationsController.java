@@ -58,7 +58,7 @@ public class ListReservationsController implements Initializable {
                 list.add(  new ReservationCustomer (myRs.getInt("Confno"),myRs.getInt("Vlicense"),myRs.getInt("BranchID"),myRs.getString("Vtype_name"),myRs.getString("Pickup_time"),myRs.getString("Dropoff_time") )); }         
         } catch (Exception exc) {exc.printStackTrace();}  
           
-         label.setText("Yes controller runs");
+         //label.setText("Yes controller runs");
         ObservableList<ReservationCustomer> observableList = FXCollections.observableList(list);
         
         Confno.setCellValueFactory(new PropertyValueFactory<>("Confno"));

@@ -48,26 +48,12 @@ public class MenuAdminController implements Initializable {
    content_pane.getChildren().add(FXMLLoader.load(getClass().getResource("ManageCustomer.fxml")));
     }
     
-     public void setInfo(Integer Login_user) throws IOException{
-       switch(Login_user) {
-        case 2:
-            menu_clerk.setVisible(false);
-            menu_manager.setVisible(true);
-            menu_manager.setTranslateY(-480); 
-            content_pane.getChildren().clear();
-            content_pane.getChildren().add(FXMLLoader.load(getClass().getResource("Manager_Vehicle.fxml")));
-        break;
-        case 3:
-             menu_clerk.setVisible(true);
-             menu_manager.setVisible(true);
-             menu_clerk.setTranslateY(-22); 
-             menu_manager.setTranslateY(-480); 
-        break;
-        default:
-            menu_clerk.setVisible(true);
-            menu_manager.setVisible(false);
+      @FXML
+    private void LoadUser(ActionEvent event)throws IOException  {
+       
+        content_pane.getChildren().clear();
+   content_pane.getChildren().add(FXMLLoader.load(getClass().getResource("Admin_User.fxml")));
     }
-   }
     
     @FXML
     private void LoadClerkReports(ActionEvent event)throws IOException  {

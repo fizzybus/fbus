@@ -6,10 +6,14 @@
 package crs;
 
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
+import java.lang.Exception;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -41,14 +45,20 @@ public class ClubMemberController implements Initializable {
         //date_membership.
     }
     
-    @FXML private void Submit() {
-        String Address = (String)location_m.getText()+", "+(String)city_m.getText();
+    @FXML private void Submit() throws SQLException {
         
-         try {
+        
+            String Address = (String)location_m.getText()+", "+(String)city_m.getText(); 
+         
+            if((null==date_membership.getValue()) || (null==cust_name_m.getText()) || (null==location_m.getText()) || (null==city_m.getText()) ) {
+                membership_status.setText("All Fields required !");
+            }
+            else {
+         
             Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
-            
+            membership_status.setText(" ");
             Statement myStmt = myConn.createStatement();
-            String sql = "SELECT * from customer where Name='"+(String)cust_name_m.getText()+"' and address='"+Address+"'";
+            String sql = "SELECT * from customer where Name='"+(String)cust_name_m.getText()+"' and address='"+location_m.getText()+"' and city='"+city_m.getText()+"'";
             ResultSet myRs = myStmt.executeQuery(sql);
             int count = 0;
             while (myRs.next()) { count++; }
@@ -58,10 +68,27 @@ public class ClubMemberController implements Initializable {
                 String Phone = myRs.getString("phone_number");
                 sql = "INSERT INTO clubmember (phone_number,Mem_date) " +
                          "VALUES ('"+Phone+"','"+date_membership.getValue()+"')";
+                
+                Boolean isOk= true;
+                try {
                 myStmt.executeUpdate(sql);
                 membership_status.setText("Membership done !");
+                } 
+                catch (SQLIntegrityConstraintViolationException | MySQLIntegrityConstraintViolationException ex) 
+                { isOk=false; membership_status.setText("Customer already a member ..");}  
+                
+                if(isOk) {
+                    sql = "UPDATE customer SET clubmember=1 WHERE phone_number='"+Phone+"'";
+                    myStmt.executeUpdate(sql);
+                }
+            
+            
+            
             }
-        } catch (Exception exc) { membership_status.setText("Registration failed!"); exc.printStackTrace();}  
+        
+         
+            }
+         
     }
     
     @Override

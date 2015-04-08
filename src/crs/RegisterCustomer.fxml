@@ -35,9 +35,12 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Button layoutX="252.0" layoutY="300.0" mnemonicParsing="false" onAction="#Submit" text="Register" />
+      <Button layoutX="252.0" layoutY="300.0" mnemonicParsing="false" onAction="#Submit" style="-fx-background-color: #F3F3F3; -fx-border-color: #F3F3F3;" text="Register" />
       <ComboBox fx:id="roadstar" layoutX="80.0" layoutY="242.0" onAction="#ToggleRoadStar" prefHeight="31.0" prefWidth="168.0" />
-      <Label fx:id="registration_status" layoutX="11.0" layoutY="305.0" prefHeight="21.0" prefWidth="179.0" textFill="WHITE" />
-      <Button layoutX="192.0" layoutY="300.0" mnemonicParsing="false" onAction="#Reset" text="Reset" />
+      <Label fx:id="registration_status" layoutX="9.0" layoutY="305.0" prefHeight="21.0" prefWidth="181.0" textFill="WHITE">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+      <Button layoutX="188.0" layoutY="300.0" mnemonicParsing="false" onAction="#Reset" style="-fx-background-color: #F3F3F3; -fx-border-color: #F3F3F3;" text="Reset" />
    </children>
 </Pane>

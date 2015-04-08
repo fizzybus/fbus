@@ -5,7 +5,7 @@
  */
 package crs;
 
-
+// Test 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.*;
@@ -59,7 +59,7 @@ public class BookCarController implements Initializable {
     @FXML private Label pop_customername,pop_customerphone,customer_indatabase;
     @FXML private Label pop_location,pop_pickup,pop_dropoff;
     @FXML private Label pop_vehiclename,pop_vehiclelicense;
-    @FXML private Label pop_cost,pop_equipment,pop_confirmation;
+    @FXML private Label pop_cost,pop_equipment,pop_confirmation,message_custinfo;
     
     final private String user= "root";
     final private String pass= "";
@@ -69,26 +69,45 @@ public class BookCarController implements Initializable {
     private String V_Type,V_Category,V_Name,Date1,Date2,customer_phone;
     private float week,day,hour,day_raw;
     
+    private Boolean isValidCustomer = false;
+    private Boolean isValidVehicle = false;
+    private Boolean isValidTime = false;
+    private Boolean isOKprice = false;
+    
     @FXML
     private void IsCustomerValid() {
+        Boolean isValidPhone = true;
+        Integer _ds1,_ds2,_ds3;
+            
+            try   {
+                    _ds1 = Integer.parseInt((String)digset1.getText());
+                    _ds2 = Integer.parseInt((String)digset2.getText());
+                    _ds3 = Integer.parseInt((String)digset3.getText());
+                    customer_indatabase.setText(" ");
+                    //isValidCustomer  = true;
+            }
+            catch (NumberFormatException e) {customer_indatabase.setText("Invalid Phone Number"); isValidPhone  = false;}
         
-          try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
-            Statement myStmt = myConn.createStatement();
-            customer_phone = (String)digset1.getText()+"-"+(String)digset2.getText()+"-"+(String)digset3.getText();
-            System.out.println("select * from customer where Name='"+(String)customername.getText()+"' and phone_number='"+customer_phone+"'");
-            ResultSet myRs = myStmt.executeQuery("select * from customer where Name='"+(String)customername.getText()+"' and phone_number='"+(String)digset1.getText()+"-"+(String)digset2.getText()+"-"+(String)digset3.getText()+"'");
-            int count = 0;
-            while (myRs.next()) { count++; }
-           
-            if(count==1)
-                customer_indatabase.setText("Customer Exists");
-            else
-                customer_indatabase.setText("No such customer");
-                
-           
-        } catch (Exception exc) {exc.printStackTrace();}  
-        
+            if(isValidPhone ) {
+                    try {
+                      Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                      Statement myStmt = myConn.createStatement();
+                      customer_phone = (String)digset1.getText()+"-"+(String)digset2.getText()+"-"+(String)digset3.getText();
+                      System.out.println("select * from customer where Name='"+(String)customername.getText()+"' and phone_number='"+customer_phone+"'");
+                      ResultSet myRs = myStmt.executeQuery("select * from customer where Name='"+(String)customername.getText()+"' and phone_number='"+(String)digset1.getText()+"-"+(String)digset2.getText()+"-"+(String)digset3.getText()+"'");
+                      int count = 0;
+                      while (myRs.next()) { count++; }
+
+                      if(count==1) {
+                          customer_indatabase.setText("Customer Exists");
+                          isValidCustomer = true;
+                      }
+                      else
+                          customer_indatabase.setText("No such customer");
+
+
+                  } catch (Exception exc) {exc.printStackTrace();}  
+            }
         
     }
     
@@ -132,43 +151,42 @@ public class BookCarController implements Initializable {
         }            
     }
     
-    
-    @FXML
-    public String getVehicleType() {
-        //System.out.println((String)vehicletype.getValue());
-        return null;
-        
-    }
     @FXML 
     private void IsAvailableTimePeriod(ActionEvent event) throws ParseException{
         
+        if( (null== pickup.getValue()) || (null==h1.getValue()) || (null==m1.getValue()) || (null== dropoff.getValue()) || (null==h2.getValue()) || (null==m2.getValue())  )
+        { date_label.setText("Pickup or Droff Date & Time invalid"); }
+        else {
                 Date1 = pickup.getValue() + " "+h1.getValue()+":"+m1.getValue()+":00";
                 Date2 = dropoff.getValue() + " "+h2.getValue()+":"+m2.getValue()+":00";
+                if(isValidVehicle) {
+                            try {
+                                    Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                                    Statement myStmt1 = myConn.createStatement();
+                                    Statement myStmt2 = myConn.createStatement();
 
-        try {
-                Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
-                Statement myStmt1 = myConn.createStatement();
-                Statement myStmt2 = myConn.createStatement();
-
-                ResultSet myRs1 = myStmt1.executeQuery("select * from reservation where `Vlicense`="+Vehicle_ID+"  and " +
-                                                       "`Dropoff_time` > '"+Date1+"' and `Pickup_time` < '"+Date2+"'");
-                ResultSet myRs2 = myStmt2.executeQuery("select * from rentalagreement where `Vlicense`="+Vehicle_ID+"  and " +
-                                                       "`Dropoff_time` > '"+Date1+"' and `Pickup_time` < '"+Date2+"'");
-                int count1=0,count2 = 0;
-                while (myRs1.next()) { count1++; }
-                while (myRs2.next()) { count2++; }
-                if(  (count1>0) || (count2>0) ){
-                     date_label.setText("Unavailable");
-                }
-                 else {
-                    date_label.setText("Available");    
-                    HashMap<String, Long> map = TotalTime(Date1,Date2);
-                    week = map.get("week");
-                    day  = map.get("day");
-                    hour = map.get("hour");
-                    day_raw = map.get("day_raw");
-                }   
-        } catch (Exception exc) {exc.printStackTrace();}            
+                                    ResultSet myRs1 = myStmt1.executeQuery("select * from reservation where `Vlicense`="+Vehicle_ID+"  and " +
+                                                                           "`Dropoff_time` > '"+Date1+"' and `Pickup_time` < '"+Date2+"'");
+                                    ResultSet myRs2 = myStmt2.executeQuery("select * from rentalagreement where `Vlicense`="+Vehicle_ID+"  and " +
+                                                                           "`Dropoff_time` > '"+Date1+"' and `Pickup_time` < '"+Date2+"'");
+                                    int count1=0,count2 = 0;
+                                    while (myRs1.next()) { count1++; }
+                                    while (myRs2.next()) { count2++; }
+                                    if(  (count1>0) || (count2>0) ){
+                                         date_label.setText("Unavailable");
+                                    }
+                                     else {
+                                        date_label.setText("Available");  
+                                        isValidTime=true;
+                                        HashMap<String, Long> map = TotalTime(Date1,Date2);
+                                        week = map.get("week");
+                                        day  = map.get("day");
+                                        hour = map.get("hour");
+                                        day_raw = map.get("day_raw");
+                                    }   
+                            } catch (Exception exc) {exc.printStackTrace();}     
+                } else {date_label.setText("Please select vehicle");}
+        }       
     }
     
    public HashMap<String,Long> TotalTime(String Date1,String Date2)  throws ParseException{
@@ -204,7 +222,6 @@ public class BookCarController implements Initializable {
        return map;
    }
    
-  
    
    @FXML 
    private void Load_Equipment( ) {
@@ -225,9 +242,15 @@ public class BookCarController implements Initializable {
        
    }
    
+  
+   
    @FXML
    private void ListVehicles() throws IOException {
    
+       if( (null==location.getValue()) || (null==vehicletype.getValue()) )
+           location_label.setText("Select Location & Category");
+       else {
+           location_label.setText(" ");
        try {
             Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
             Statement myStmt = myConn.createStatement();
@@ -249,37 +272,69 @@ public class BookCarController implements Initializable {
         controller.setInfo(Info);
            
        stage.showAndWait();
-       Vehicle_ID = controller.V_ID();
        
-       try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
-            Statement myStmt = myConn.createStatement();
-             ResultSet myRs = myStmt.executeQuery("select category,Vtype_name,Vname,odometer from vehicle where Vlicense="+Vehicle_ID+"");
-            
-            myRs.next();  odometer = myRs.getInt("odometer");  V_Name = myRs.getString("Vname"); V_Category =  myRs.getString("category");  V_Type = myRs.getString("Vtype_name");
-        } catch (Exception exc) {exc.printStackTrace();}  
+       try { Vehicle_ID = controller.V_ID(); isValidVehicle=true;}
+       catch (NullPointerException | NumberFormatException e) {location_label.setText("Please select vehicle"); isValidVehicle=false;}
        
-       Load_Equipment();
+       if(isValidVehicle) {
+       
+                try {
+                     Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                     Statement myStmt = myConn.createStatement();
+                      ResultSet myRs = myStmt.executeQuery("select category,Vtype_name,Vname,odometer from vehicle where Vlicense="+Vehicle_ID+"");
 
+                     myRs.next();  odometer = myRs.getInt("odometer");  V_Name = myRs.getString("Vname"); V_Category =  myRs.getString("category");  V_Type = myRs.getString("Vtype_name");
+                 } catch (Exception exc) {exc.printStackTrace();}  
+
+                Load_Equipment();
+       
+       }
+       
+       }
    }
    
    @FXML
    private void Load_Confirmation(ActionEvent event)throws IOException {
+       
+       /*
+             private Boolean isValidCustomer = false;
+    private Boolean isValidVehicle = false;
+    private Boolean isValidTime = false;
+    private Boolean isOKprice = false;
+               
+        */     
+       Boolean _License=true,_cardtype=true,_creditcardnumber=true,_card_expiry=true;
+       if(trans_status==1) {
+           try {int _ds1 = Integer.parseInt(license.getText()); } catch (NumberFormatException e) {message_custinfo.setText("Invalid License"); _License=false;}
+           try {String _ds1 = (String)cardtype.getValue(); } catch (NullPointerException e) {message_custinfo.setText("Select Card Type"); _cardtype=false;}      
+           try {int _ds2 = Integer.parseInt(creditcardnumber.getText()); } catch (NumberFormatException e) {message_custinfo.setText("Invalid Credit Card Number"); _License=false;}
+           if(null==card_expiry.getValue()) {message_custinfo.setText("Select Card Expiry"); _card_expiry=false;}      
+
+       }
+       
+       String Equip= (String)equipment.getValue();
+       if("None"== ((String)equipment.getValue()))
+            Equip = null;
+       
+       if(_License && _cardtype && _creditcardnumber && _card_expiry && isValidCustomer && isValidVehicle && isValidTime && isOKprice) {
        Integer latest_entry_number=0;
+       
+       
+       
        try {
             Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
             Statement myStmt = myConn.createStatement();
             ResultSet myRs;
             String sql = "";
             if(trans_status==0) {
-                 sql = "INSERT INTO Reservation (Phone_number,Vtype_name,Vlicense,BranchID,Pickup_time,Dropoff_time) " +
-                         "VALUES ('"+customer_phone+"','"  + (String)vehicletype.getValue()+ "',"+Vehicle_ID+","+Branch_ID+",'"+ Date1+"','"+Date2+"')";
+                 sql = "INSERT INTO Reservation (Phone_number,Vtype_name,Vlicense,BranchID,Pickup_time,Dropoff_time,Equipment) " +
+                         "VALUES ('"+customer_phone+"','"  + (String)vehicletype.getValue()+ "',"+Vehicle_ID+","+Branch_ID+",'"+ Date1+"','"+Date2+"',"+Equip+")";
             System.out.println(sql);
             }
             else {
                System.out.println(sql);
-                sql = "INSERT INTO Rentalagreement (Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time) " +
-                         "VALUES ('"+customer_phone+"',"+Vehicle_ID+","+Integer.parseInt((String)creditcardnumber.getText())+",'"+card_expiry.getValue()+"','"+(String)cardtype.getValue()+"',"+odometer+",'"+Date1+"','"+Date2+"')";
+                sql = "INSERT INTO Rentalagreement (Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Equipment) " +
+                         "VALUES ('"+customer_phone+"',"+Vehicle_ID+","+Integer.parseInt((String)creditcardnumber.getText())+",'"+card_expiry.getValue()+"','"+(String)cardtype.getValue()+"',"+odometer+",'"+Date1+"','"+Date2+"',"+Equip +" )";
                System.out.println(sql); 
             }
             
@@ -292,19 +347,6 @@ public class BookCarController implements Initializable {
             myRs.next();
             latest_entry_number = myRs.getInt("Latest_Entry");
         } catch (Exception exc) {exc.printStackTrace();}  
-       
-       /*
-            this.customer_name = customer_name;
-            this.customer_phone = customer_phone;
-            this.vehicle_name = vehicle_name;
-            this.vehicle_id=vehcile_id;
-            this.vehicle_type=vehicle_type;
-            this.transaction_location=trans_location;
-            this.transaction_pickup=trans_pickup;
-            this.transaction_dropoff=trans_dropoff;
-            this.equipment=equipment;
-            this.cost=cost;
-       */
        
        
        Mediator1 Info = new Mediator1((String)customername.getText(),customer_phone,V_Name,Vehicle_ID,V_Type,trans_status,(String)location.getValue(),Date1,Date2,(String)equipment.getValue(),estimated_cost.getText(),latest_entry_number);
@@ -321,13 +363,21 @@ public class BookCarController implements Initializable {
            
        stage.showAndWait();
         
-       
-        
+       }
+       else {
+           if(!isValidCustomer) customer_indatabase.setText("Please validate customer");
+           if(!isValidVehicle) location_label.setText("Select vehicle");
+           if(!isValidTime) date_label.setText("Validate vehicle timeperiod");
+           if(!isOKprice) estimated_cost.setText("Cost estimate missing");
+       }
    }
    
    @FXML
    private void CalculateEstimatedCost(ActionEvent event) throws SQLException{
        
+       
+    
+       if(isValidTime  && isValidVehicle  ) {
        Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
        Statement myStmt = myConn.createStatement();
        ResultSet myRs = myStmt.executeQuery("select * from vehicletype where vtype_name='"+V_Type +"'");
@@ -345,7 +395,11 @@ public class BookCarController implements Initializable {
         //   System.out.println("Hourly Rate "+myRs1.getFloat("hourly_rate"));
            price2 = day_raw*(myRs.getFloat("daily_rate")) + hour*(myRs.getFloat("hourly_rate"));    
        }
-       estimated_cost.setText(String.format("%.2f",price1+price2)+"  CAD");  
+       estimated_cost.setText(String.format("%.2f",price1+price2)+"  CAD"); 
+       isOKprice=true;
+       }
+       else
+           estimated_cost.setText("Time-Period or Vehicle Invalid");
    }
             
     @FXML
@@ -375,8 +429,6 @@ public class BookCarController implements Initializable {
              } catch (Exception exc) {exc.printStackTrace();}     
     }
         
-    
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
