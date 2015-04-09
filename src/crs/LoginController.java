@@ -34,8 +34,8 @@ public class LoginController implements Initializable {
     private TextField username;
     @FXML
     private PasswordField password;
-    final private String user= "root";
-    final private String pass= "";
+    final private String user= "team06";
+    final private String pass= "t3xtb00k";
     private Integer Login_user; //1 = clerk 2=manager 3=Amin
     
     @FXML
@@ -56,7 +56,7 @@ public class LoginController implements Initializable {
         
         }
         else
-          fail_login_message.setText(" Login Failed,try again ..");
+          fail_login_message.setText("Login Failed,try again ..");
     }
     
     @FXML
@@ -94,19 +94,20 @@ public class LoginController implements Initializable {
         String Type=null;
         switch(Login_user) {
         case 2:
-            Type = "manager";
+            Type = "Manager";
         break;
         case 3:
-            Type = "admin";
+            Type = "Admin";
         break;
         default:
-            Type="clerk";
+            Type="Clerk";
     }
         boolean valid = true;
         try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost/crs", user, pass);
+         
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select * from employees where username='"+  username.getText()+"' and password='"+password.getText()+"' and Type='"+Type +"'");
+            ResultSet myRs = myStmt.executeQuery("select * from Employees where Username='"+  username.getText()+"' and Password='"+password.getText()+"' and Type='"+Type +"'");
             int count = 0;
             while (myRs.next()) { count++; }
             if(count==0) valid = false;

@@ -61,8 +61,8 @@ public class BookCarController implements Initializable {
     @FXML private Label pop_vehiclename,pop_vehiclelicense;
     @FXML private Label pop_cost,pop_equipment,pop_confirmation,message_custinfo;
     
-    final private String user= "root";
-    final private String pass= "";
+    final private String user= "team06";
+    final private String pass= "t3xtb00k";
     private int Vehicle_ID;
     private int Branch_ID,odometer;
     private int trans_status;  // Rent or Reserve (Reserve = 0 Rent = 1)
@@ -90,11 +90,11 @@ public class BookCarController implements Initializable {
         
             if(isValidPhone ) {
                     try {
-                      Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                      Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
                       Statement myStmt = myConn.createStatement();
                       customer_phone = (String)digset1.getText()+"-"+(String)digset2.getText()+"-"+(String)digset3.getText();
-                      System.out.println("select * from customer where Name='"+(String)customername.getText()+"' and phone_number='"+customer_phone+"'");
-                      ResultSet myRs = myStmt.executeQuery("select * from customer where Name='"+(String)customername.getText()+"' and phone_number='"+(String)digset1.getText()+"-"+(String)digset2.getText()+"-"+(String)digset3.getText()+"'");
+                      System.out.println("select * from Customer where Name='"+(String)customername.getText()+"' and Phone_number='"+customer_phone+"'");
+                      ResultSet myRs = myStmt.executeQuery("select * from Customer where Name='"+(String)customername.getText()+"' and Phone_number='"+(String)digset1.getText()+"-"+(String)digset2.getText()+"-"+(String)digset3.getText()+"'");
                       int count = 0;
                       while (myRs.next()) { count++; }
 
@@ -161,13 +161,13 @@ public class BookCarController implements Initializable {
                 Date2 = dropoff.getValue() + " "+h2.getValue()+":"+m2.getValue()+":00";
                 if(isValidVehicle) {
                             try {
-                                    Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                                    Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
                                     Statement myStmt1 = myConn.createStatement();
                                     Statement myStmt2 = myConn.createStatement();
 
-                                    ResultSet myRs1 = myStmt1.executeQuery("select * from reservation where `Vlicense`="+Vehicle_ID+"  and " +
+                                    ResultSet myRs1 = myStmt1.executeQuery("select * from Reservation where `Vlicense`="+Vehicle_ID+"  and " +
                                                                            "`Dropoff_time` > '"+Date1+"' and `Pickup_time` < '"+Date2+"'");
-                                    ResultSet myRs2 = myStmt2.executeQuery("select * from rentalagreement where `Vlicense`="+Vehicle_ID+"  and " +
+                                    ResultSet myRs2 = myStmt2.executeQuery("select * from RentalAgreement where `Vlicense`="+Vehicle_ID+"  and " +
                                                                            "`Dropoff_time` > '"+Date1+"' and `Pickup_time` < '"+Date2+"'");
                                     int count1=0,count2 = 0;
                                     while (myRs1.next()) { count1++; }
@@ -228,11 +228,11 @@ public class BookCarController implements Initializable {
        
         List<String> e_list = new ArrayList<String>();
         try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select equipmentName from additional_equipment where vehicleCategory='"+V_Category+"'");
+            ResultSet myRs = myStmt.executeQuery("select EquipmentName from Additional_equipment where VehicleCategory='"+V_Category+"'");
             e_list.add("None");
-            while (myRs.next()) { e_list.add(myRs.getString("equipmentName")); }  
+            while (myRs.next()) { e_list.add(myRs.getString("EquipmentName")); }  
         } catch (Exception exc) {exc.printStackTrace();}  
         
         ObservableList eqp_list = FXCollections.observableList(e_list);
@@ -252,9 +252,9 @@ public class BookCarController implements Initializable {
        else {
            location_label.setText(" ");
        try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
-             ResultSet myRs = myStmt.executeQuery("select BranchID from branch where location='"+(String)location.getValue() +"'");
+             ResultSet myRs = myStmt.executeQuery("select BranchID from Branch where Location='"+(String)location.getValue() +"'");
             
             myRs.next();  Branch_ID =  myRs.getInt("BranchID");
         } catch (Exception exc) {exc.printStackTrace();}  
@@ -279,11 +279,11 @@ public class BookCarController implements Initializable {
        if(isValidVehicle) {
        
                 try {
-                     Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                     Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
                      Statement myStmt = myConn.createStatement();
-                      ResultSet myRs = myStmt.executeQuery("select category,Vtype_name,Vname,odometer from vehicle where Vlicense="+Vehicle_ID+"");
+                      ResultSet myRs = myStmt.executeQuery("select Category,Vtype_name,Vname,Odometer from Vehicle where Vlicense="+Vehicle_ID+"");
 
-                     myRs.next();  odometer = myRs.getInt("odometer");  V_Name = myRs.getString("Vname"); V_Category =  myRs.getString("category");  V_Type = myRs.getString("Vtype_name");
+                     myRs.next();  odometer = myRs.getInt("Odometer");  V_Name = myRs.getString("Vname"); V_Category =  myRs.getString("Category");  V_Type = myRs.getString("Vtype_name");
                  } catch (Exception exc) {exc.printStackTrace();}  
 
                 Load_Equipment();
@@ -306,7 +306,7 @@ public class BookCarController implements Initializable {
        Boolean _License=true,_cardtype=true,_creditcardnumber=true,_card_expiry=true;
        if(trans_status==1) {
            try {int _ds1 = Integer.parseInt(license.getText()); } catch (NumberFormatException e) {message_custinfo.setText("Invalid License"); _License=false;}
-           try {String _ds1 = (String)cardtype.getValue(); } catch (NullPointerException e) {message_custinfo.setText("Select Card Type"); _cardtype=false;}      
+           if(null==cardtype.getValue()) {message_custinfo.setText("Select Card Type"); _cardtype=false;}      
            try {int _ds2 = Integer.parseInt(creditcardnumber.getText()); } catch (NumberFormatException e) {message_custinfo.setText("Invalid Credit Card Number"); _License=false;}
            if(null==card_expiry.getValue()) {message_custinfo.setText("Select Card Expiry"); _card_expiry=false;}      
 
@@ -326,7 +326,7 @@ public class BookCarController implements Initializable {
        
        
        try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
             ResultSet myRs;
             String sql = "";
@@ -337,16 +337,16 @@ public class BookCarController implements Initializable {
             }
             else {
                System.out.println(sql);
-                sql = "INSERT INTO Rentalagreement (Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Equipment) " +
-                         "VALUES ('"+customer_phone+"',"+Vehicle_ID+","+Integer.parseInt((String)creditcardnumber.getText())+",'"+card_expiry.getValue()+"','"+(String)cardtype.getValue()+"',"+odometer+",'"+Date1+"','"+Date2+"',"+Equip +" )";
+                sql = "INSERT INTO RentalAgreement (Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Equipment,Dlicense) " +
+                         "VALUES ('"+customer_phone+"',"+Vehicle_ID+","+Integer.parseInt((String)creditcardnumber.getText())+",'"+card_expiry.getValue()+"','"+(String)cardtype.getValue()+"',"+odometer+",'"+Date1+"','"+Date2+"',"+Equip +","+Integer.parseInt(license.getText()) +" )";
                System.out.println(sql); 
             }
             
             myStmt.executeUpdate(sql);
             if(trans_status==0)
-                myRs = myStmt.executeQuery("select MAX(Confno) AS Latest_Entry FROM reservation");
+                myRs = myStmt.executeQuery("select MAX(Confno) AS Latest_Entry FROM Reservation");
             else
-                myRs = myStmt.executeQuery("select MAX(RentId) AS Latest_Entry FROM rentalagreement");
+                myRs = myStmt.executeQuery("select MAX(RentId) AS Latest_Entry FROM RentalAgreement");
             
             myRs.next();
             latest_entry_number = myRs.getInt("Latest_Entry");
@@ -382,22 +382,22 @@ public class BookCarController implements Initializable {
        
     
        if(isValidTime  && isValidVehicle  ) {
-       Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+       Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
        Statement myStmt = myConn.createStatement();
-       ResultSet myRs = myStmt.executeQuery("select * from vehicletype where vtype_name='"+V_Type +"'");
+       ResultSet myRs = myStmt.executeQuery("select * from VehicleType where Vtype_name='"+V_Type +"'");
        myRs.next();
        System.out.println("Week :"+week+ " Day :"+day+" Hour :"+hour);
-       float price1 = day*(myRs.getFloat("daily_rate")+myRs.getFloat("ins_drate"))  +  
-                     week*(myRs.getFloat("weekly_rate")+myRs.getFloat("ins_wrate"))  + 
-                     hour*(myRs.getFloat("hourly_rate")+myRs.getFloat("ins_hrate"))  ;
+       float price1 = day*(myRs.getFloat("Daily_rate")+myRs.getFloat("Ins_drate"))  +  
+                     week*(myRs.getFloat("Weekly_rate")+myRs.getFloat("Ins_wrate"))  + 
+                     hour*(myRs.getFloat("Hourly_rate")+myRs.getFloat("Ins_hrate"))  ;
        float price2 = 0.00f;
        if(equipment.getValue()!="None") {
-           System.out.println("select * from additional_equipment where equipmentName='"+(String)equipment.getValue()+"'");
-           myRs = myStmt.executeQuery("select * from additional_equipment where equipmentName='"+(String)equipment.getValue()+"'");
+           System.out.println("select * from Additional_equipment where EquipmentName='"+(String)equipment.getValue()+"'");
+           myRs = myStmt.executeQuery("select * from Additional_equipment where EquipmentName='"+(String)equipment.getValue()+"'");
            myRs.next();
         //   System.out.println("Daily Rate "+myRs1.getFloat("daily_rate"));
         //   System.out.println("Hourly Rate "+myRs1.getFloat("hourly_rate"));
-           price2 = day_raw*(myRs.getFloat("daily_rate")) + hour*(myRs.getFloat("hourly_rate"));    
+           price2 = day_raw*(myRs.getFloat("Daily_rate")) + hour*(myRs.getFloat("Hourly_rate"));    
        }
        estimated_cost.setText(String.format("%.2f",price1+price2)+"  CAD"); 
        isOKprice=true;
@@ -410,12 +410,12 @@ public class BookCarController implements Initializable {
     private void IsAvailableLocation(ActionEvent event) {
          String VehicleType = (String) vehicletype.getValue();
          try {
-                Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
                 Statement myStmt = myConn.createStatement();
-                ResultSet myRs = myStmt.executeQuery("select BranchID from branch where location='"+(String)location.getValue() +"'");
+                ResultSet myRs = myStmt.executeQuery("select BranchID from Branch where Location='"+(String)location.getValue() +"'");
                 myRs.next();
                 int BranchID =  myRs.getInt("BranchID");
-                myRs =  myStmt.executeQuery("Select * from vehicle where BranchID="+BranchID+" and Vtype_name='"+VehicleType+"' and Status=1 order by Vlicense LIMIT 1" );
+                myRs =  myStmt.executeQuery("Select * from Vehicle where BranchID="+BranchID+" and Vtype_name='"+VehicleType+"' and Status=1 order by Vlicense LIMIT 1" );
                 int count = 0;
                 while (myRs.next()) { count++; }
                 if(count==1){
@@ -447,12 +447,12 @@ public class BookCarController implements Initializable {
         List<String> list = new ArrayList<String>();
         List<String> listvehicletype = new ArrayList<String>();
         try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select location from branch");
-            while (myRs.next()) { list.add(myRs.getString("location")); }  
-            myRs = myStmt.executeQuery("select vtype_name from vehicletype");
-            while (myRs.next()) { listvehicletype.add(myRs.getString("vtype_name")); }  
+            ResultSet myRs = myStmt.executeQuery("select Location from Branch");
+            while (myRs.next()) { list.add(myRs.getString("Location")); }  
+            myRs = myStmt.executeQuery("select Vtype_name from VehicleType");
+            while (myRs.next()) { listvehicletype.add(myRs.getString("Vtype_name")); }  
         } catch (Exception exc) {exc.printStackTrace();}  
          
         ObservableList<String> observableList = FXCollections.observableList(list);

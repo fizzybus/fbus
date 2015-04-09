@@ -39,8 +39,8 @@ public class RegisterCustomerController implements Initializable {
     @FXML private ComboBox roadstar;
     @FXML private Label registration_status;
     private Integer road_star;
-    final private String user= "root";
-    final private String pass= "";
+    final private String user= "team06";
+    final private String pass= "t3xtb00k";
     
     @FXML private void ToggleRoadStar() {
         if("Yes"==roadstar.getValue())
@@ -94,11 +94,11 @@ public class RegisterCustomerController implements Initializable {
         
         if(isValidPhone && _validcity && _validlocation && _validname ) {
             
-                   Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                   Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
                    String phone =(String)ds1.getText() +"-"+ (String)ds2.getText() +"-"+ (String)ds3.getText();
                    String Address = (String)location.getText()+", "+(String)city.getText();
                    Statement myStmt = myConn.createStatement();
-                   String sql = "INSERT INTO customer (phone_number,Name,address,city,roadstar) " +
+                   String sql = "INSERT INTO Customer (Phone_number,Name,Address,City,Roadstar) " +
                                 "VALUES ('"+phone+"','"  + (String)cust_name.getText()+ "','"+_location+"','"+ _city+"',"+road_star+")";
                    try {
                    myStmt.executeUpdate(sql);

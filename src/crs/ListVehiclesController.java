@@ -39,8 +39,8 @@ public class ListVehiclesController implements Initializable {
     @FXML private Label label;
     private Integer license;
    
-    final private String user= "root";
-    final private String pass= "";
+    final private String user= "team06";
+    final private String pass= "t3xtb00k";
     
     public Integer V_ID() {
         return license;
@@ -51,9 +51,9 @@ public class ListVehiclesController implements Initializable {
            
         List<Vehicle> list = new ArrayList<Vehicle>();
         try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
-            ResultSet myRs =  myStmt.executeQuery("Select * from vehicle where BranchID="+Info.getdata2()+" and Vtype_name='"+Info.getdata1()+"' and Status=1 order by Vlicense" );
+            ResultSet myRs =  myStmt.executeQuery("Select * from Vehicle where BranchID="+Info.getdata2()+" and Vtype_name='"+Info.getdata1()+"' and Status=1 order by Vlicense" );
             while (myRs.next()) { list.add(new Vehicle  (myRs.getInt("Vlicense"), myRs.getString("Vname"),myRs.getInt("Year")    )); }         
         } catch (Exception exc) {exc.printStackTrace();}  
          

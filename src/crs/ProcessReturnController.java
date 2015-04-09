@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,8 +61,8 @@ public class ProcessReturnController implements Initializable {
     private Integer readingodometer=0;
     private Boolean isValidCustomer = false,isPriceCalculated=false;
     private Integer clubmember=0,roadstar;
-    final private String user= "root";
-    final private String pass= "";
+    final private String user= "team06";
+    final private String pass= "t3xtb00k";
     
     
      
@@ -85,7 +87,7 @@ public class ProcessReturnController implements Initializable {
     
    @FXML public void LocateRecord() throws SQLException {
        
-       Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+       Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
        Statement myStmt = myConn.createStatement();
        ResultSet rs;
        
@@ -108,7 +110,7 @@ public class ProcessReturnController implements Initializable {
             if(isvalid_phone && isValidDate) { 
                 
                 customer_phone = ds1.getText()+"-"+ds2.getText()+"-"+ds3.getText();  
-                String sql = "Select * from rentalagreement WHERE Phone_number='"+customer_phone+"' and DATE(Pickup_time)='"+from.getValue() +"' and DATE(Dropoff_time)='"+to.getValue() +"'";
+                String sql = "Select * from RentalAgreement WHERE Phone_number='"+customer_phone+"' and DATE(Pickup_time)='"+from.getValue() +"' and DATE(Dropoff_time)='"+to.getValue() +"'";
                 System.out.println(sql);
                 rs = myStmt.executeQuery(sql);
                 int count=0;
@@ -129,16 +131,16 @@ public class ProcessReturnController implements Initializable {
                     isValidCustomer = true;
                     
                     message1.setText("Record Located");
-                    sql = "SELECT clubmember,roadstar,Name from customer WHERE phone_number='"+customer_phone+"'";
+                    sql = "SELECT Clubmember,Roadstar,Name from Customer WHERE Phone_number='"+customer_phone+"'";
                     rs = myStmt.executeQuery(sql); 
                     rs.next();
-                    clubmember =  rs.getInt("clubmember");
-                    roadstar =  rs.getInt("roadstar");
+                    clubmember =  rs.getInt("Clubmember");
+                    roadstar =  rs.getInt("Roadstar");
                     customer_name = rs.getString("Name");
                     if(clubmember==1) {
                         pane_clubmember.setVisible(true);
                         content_processreturn_section2.setTranslateY(40);
-                        rs = myStmt.executeQuery("Select Points from clubmember  WHERE phone_number='"+customer_phone+"'");
+                        rs = myStmt.executeQuery("Select Points from ClubMember  WHERE Phone_number='"+customer_phone+"'");
                         rs.next();
                         Total_points = rs.getInt("Points");
                         member_points.setText(Integer.toString(Total_points));
@@ -163,7 +165,7 @@ public class ProcessReturnController implements Initializable {
                 catch (NumberFormatException e) {message1.setText("Invalid Rental number"); isvalid_confirmation = false;}
                 
                 if(isvalid_confirmation)  {
-                    String sql = "SELECT * from rentalagreement WHERE RentId="+rentalid+"";
+                    String sql = "SELECT * from RentalAgreement WHERE RentId="+rentalid+"";
                     System.out.println(sql);
                         rs = myStmt.executeQuery(sql);
                         int count=0;
@@ -186,16 +188,16 @@ public class ProcessReturnController implements Initializable {
                             isValidCustomer = true;
                             message1.setText("Record Located"); 
                             
-                            sql = "SELECT clubmember,roadstar,Name from customer WHERE phone_number='"+customer_phone+"'";
+                            sql = "SELECT Clubmember,Roadstar,Name from Customer WHERE Phone_number='"+customer_phone+"'";
                             rs = myStmt.executeQuery(sql); 
                             rs.next();
-                            clubmember =  rs.getInt("clubmember");
-                            roadstar =  rs.getInt("roadstar");
+                            clubmember =  rs.getInt("Clubmember");
+                            roadstar =  rs.getInt("Roadstar");
                             customer_name = rs.getString("Name");
                             if(clubmember==1) {
                                 pane_clubmember.setVisible(true);
                                 content_processreturn_section2.setTranslateY(40);
-                                rs = myStmt.executeQuery("Select Points from clubmember WHERE phone_number='"+customer_phone+"'");
+                                rs = myStmt.executeQuery("Select Points from ClubMember WHERE Phone_number='"+customer_phone+"'");
                                 rs.next();
                                  Total_points = rs.getInt("Points");
                                  member_points.setText(Integer.toString(Total_points));
@@ -216,17 +218,17 @@ public class ProcessReturnController implements Initializable {
    public void Load_ReturnConfirmation() throws IOException, SQLException {
        if(isPriceCalculated) {
        
-       Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+       Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
        Statement myStmt = myConn.createStatement();
        ResultSet rs;
-       String sql = "SELECT Vname from vehicle WHERE Vlicense="+Vlicense+"";
+       String sql = "SELECT Vname from Vehicle WHERE Vlicense="+Vlicense+"";
        rs = myStmt.executeQuery(sql); 
        rs.next();   String Name = rs.getString("Vname");
        
         Integer Tankfull=0;
         if("Yes"==combo_tankfull.getValue()) Tankfull = 1;
 
-        String sql_ = "INSERT INTO returnvehicle (RentID,Dropoff_time,Fulltank,Odometer,Cost) VALUES ("+Rent_ID+",'"+ReturnDate+"',"+Tankfull+","+readingodometer+","+(bc+ic+ec+oc)+")";
+        String sql_ = "INSERT INTO ReturnVehicle (RentID,Dropoff_time,Fulltank,Odometer,Cost) VALUES ("+Rent_ID+",'"+ReturnDate+"',"+Tankfull+","+readingodometer+","+(bc+ic+ec+oc)+")";
         System.out.println(sql_);
         myStmt.executeUpdate(sql_);
 
@@ -242,7 +244,7 @@ public class ProcessReturnController implements Initializable {
        
        Object points = " ";
        if(clubmember==1) {
-           rs = myStmt.executeQuery("select Points from clubmember where Phone_number='"+customer_phone+"'");
+           rs = myStmt.executeQuery("select Points from ClubMember where Phone_number='"+customer_phone+"'");
            rs.next(); points = rs.getInt("Points");
            
        }
@@ -261,6 +263,7 @@ public class ProcessReturnController implements Initializable {
        
        Boolean isvalid_points = true;
        Boolean isvalidDate = true;
+       Boolean isvalidReturnDate=true;
        String sql_sub_points="";
        String sql_add_points="";
        Integer points=0;
@@ -308,24 +311,36 @@ public class ProcessReturnController implements Initializable {
        }
        if(!isValidCustomer) message1.setText("Please validate Rental Info");
        
-       if(isValidCustomer && isValid_readingodometer && isvalid_points && (readingodometer - Odometer>=0) && isvalidDate) {
+       if(isvalidDate) { 
+           SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+           String Date1Copy = Pickup_DateTime.substring(0,Pickup_DateTime.length() - 8);
+           String Date2Copy = ReturnDate.substring(0,ReturnDate.length() - 8);
+           System.out.println("Date1 = "+Date1Copy);
+           System.out.println("Date2 = "+Date2Copy);
+           Date From = format.parse(Date1Copy);
+           Date To =  format.parse(Date2Copy);
+           if(To.compareTo(From)<0)
+           { isvalidReturnDate= false;  message2.setText("Return date before Checkout date ...");}
+       }
+       
+       if(isValidCustomer && isValid_readingodometer && isvalid_points && (readingodometer - Odometer>=0) && isvalidDate && isvalidReturnDate) {
            Boolean isOK = true;
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
            Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select Vtype_name from vehicle where Vlicense='"+Vlicense +"'");
+            ResultSet myRs = myStmt.executeQuery("select Vtype_name from Vehicle where Vlicense='"+Vlicense +"'");
            myRs.next(); 
            String V_Type = myRs.getString("Vtype_name");
            
                       if( (points >=1000)) {
         
-               if(V_Type.equals("Luxury")||V_Type.equals("SUV")||V_Type.equals("Van")||V_Type.equals("12-Foot")||V_Type.equals("15-Foot")||V_Type.equals("24-Foot")||V_Type.equals("Box")||V_Type.equals("Cargo"))
+               if(V_Type.equals("Luxury")||V_Type.equals("SUV")||V_Type.equals("Van")||V_Type.equals("12-foot")||V_Type.equals("15-foot")||V_Type.equals("24-foot")||V_Type.equals("Box Truck")||V_Type.equals("Cargo Van"))
                {    
                     sector = 1; 
                     unit_points = points/1500; 
                     
                     if(unit_points==0){ message2.setText("Points should be mutiple of 1500.."); isOK = false;}
                     else {
-                        sql_sub_points = "UPDATE clubmember SET Points = Points -"+unit_points*1500+" WHERE Phone_number='"+customer_phone+"'";
+                        sql_sub_points = "UPDATE Clubmember SET Points = Points -"+unit_points*1500+" WHERE Phone_number='"+customer_phone+"'";
                         myStmt.executeUpdate(sql_sub_points);
                     }
                     
@@ -335,13 +350,13 @@ public class ProcessReturnController implements Initializable {
                    unit_points = points/1000;
                     if(unit_points==0){ message2.setText("Points should be mutiple of 1000.."); isOK = false; }
                     else {
-                        sql_sub_points = "UPDATE clubmember SET Points = Points -"+unit_points*1000+" WHERE Phone_number='"+customer_phone+"'";
+                        sql_sub_points = "UPDATE Clubmember SET Points = Points -"+unit_points*1000+" WHERE Phone_number='"+customer_phone+"'";
                         myStmt.executeUpdate(sql_sub_points);
                     }
                }
                
                if(isOK) {
-              if((day >=1)&& (unit_points>=1) ) {
+              if((day >=0)&& (unit_points>=1) ) {
                    day = day - unit_points;
                    temp = day;
                    if(temp<0) {
@@ -349,9 +364,9 @@ public class ProcessReturnController implements Initializable {
                        temp = temp*(-1);
                        
                        if(sector==1)
-                           sql_add_points = "UPDATE clubmember SET Points = Points +"+temp*1500+" WHERE Phone_number='"+customer_phone+"'";
+                           sql_add_points = "UPDATE ClubMember SET Points = Points +"+temp*1500+" WHERE Phone_number='"+customer_phone+"'";
                        else
-                           sql_add_points = "UPDATE clubmember SET Points = Points +"+temp*1000+" WHERE Phone_number='"+customer_phone+"'";
+                           sql_add_points = "UPDATE ClubMember SET Points = Points +"+temp*1000+" WHERE Phone_number='"+customer_phone+"'";
                        
                        myStmt.executeUpdate( sql_add_points);
                    }
@@ -365,19 +380,19 @@ public class ProcessReturnController implements Initializable {
        
       if(isOK) {
        
-       myRs = myStmt.executeQuery("select * from vehicletype where vtype_name='"+V_Type +"'");
+       myRs = myStmt.executeQuery("select * from VehicleType where Vtype_name='"+V_Type +"'");
        myRs.next();
                       
                       
        float price3 = 0.00f;
        if( (readingodometer - Odometer) > 500)
-           price3 = oc=  myRs.getFloat("km_rate")*(readingodometer - Odometer -500);
+           price3 = oc=  myRs.getFloat("Km_rate")*(readingodometer - Odometer -500);
        System.out.println("Price 3 :"+price3);
        
        
-       float ins_drate = myRs.getFloat("ins_drate");
-       float ins_wrate = myRs.getFloat("ins_wrate");
-       float ins_hrate = myRs.getFloat("ins_hrate");
+       float ins_drate = myRs.getFloat("Ins_drate");
+       float ins_wrate = myRs.getFloat("Ins_wrate");
+       float ins_hrate = myRs.getFloat("Ins_hrate");
        
        if(roadstar==1) {
            ins_drate = (float) (ins_drate/2.0);
@@ -388,9 +403,9 @@ public class ProcessReturnController implements Initializable {
        System.out.println("Insurance Daily :"+ins_drate+" Weekly: "+ins_wrate+" Hourly :"+ins_hrate);
       
        
-       float _price1 = bc =  day*(myRs.getFloat("daily_rate"))  +  
-                     week*(myRs.getFloat("weekly_rate")) + 
-                     hour*(myRs.getFloat("hourly_rate")) ; 
+       float _price1 = bc =  day*(myRs.getFloat("Daily_rate"))  +  
+                     week*(myRs.getFloat("Weekly_rate")) + 
+                     hour*(myRs.getFloat("Hourly_rate")) ; 
        
        float price1_ = ic =day*(ins_drate)  +  
                         week*(ins_wrate) + 
@@ -400,10 +415,10 @@ public class ProcessReturnController implements Initializable {
        
        float price2 = 0.00f;
        if(equipment!=null) {
-           System.out.println("select * from additional_equipment where equipmentName='"+equipment+"'");
-           myRs = myStmt.executeQuery("select * from additional_equipment where equipmentName='"+equipment+"'");
+           System.out.println("select * from Additional_equipment where EquipmentName='"+equipment+"'");
+           myRs = myStmt.executeQuery("select * from Additional_equipment where EquipmentName='"+equipment+"'");
            myRs.next();
-           price2 = ec =day_raw*(myRs.getFloat("daily_rate")) + hour*(myRs.getFloat("hourly_rate"));    
+           price2 = ec =day_raw*(myRs.getFloat("Daily_rate")) + hour*(myRs.getFloat("Hourly_rate"));    
        }
        System.out.println("Price 2 :"+price2);
        
@@ -412,16 +427,16 @@ public class ProcessReturnController implements Initializable {
        
        if(clubmember==1) {
             float total_points = (float) ((total_cost)/5.0);
-            String _sql = "UPDATE clubmember SET Points = Points +"+total_points+", Amount_spent=Amount_spent+"+total_cost+" WHERE Phone_number='"+customer_phone+"'";  
+            String _sql = "UPDATE ClubMember SET Points = Points +"+total_points+", Amount_spent=Amount_spent+"+total_cost+" WHERE Phone_number='"+customer_phone+"'";  
              System.out.println(_sql);
             myStmt.executeUpdate(_sql);
        }
      
-        String sql = "UPDATE vehicle SET odometer ="+readingodometer +" WHERE Vlicense="+Vlicense+"";
+        String sql = "UPDATE Vehicle SET Odometer ="+readingodometer +" WHERE Vlicense="+Vlicense+"";
         System.out.println(sql);
         myStmt.executeUpdate(sql);
 
-        sql = "UPDATE rentalagreement SET CardNo=NULL,ExpiryDate=NULL,CardType=NULL,Dlicense=NULL  WHERE RentId="+Rent_ID+"";
+        sql = "UPDATE RentalAgreement SET CardNo=NULL,ExpiryDate=NULL,CardType=NULL,Dlicense=NULL  WHERE RentId="+Rent_ID+"";
         System.out.println(sql);
         myStmt.executeUpdate(sql);
 

@@ -48,8 +48,8 @@ public class RentViaReservationController implements Initializable {
     private Integer selection; // Did the user selcted phone or give confirmation number (phone =0) (Confirmation =1)
     private String customer_phone;
     private Boolean valid_confirmation_number=false;
-    final private String user= "root";
-    final private String pass= "";
+    final private String user= "team06";
+    final private String pass= "t3xtb00k";
     /**
      * Initializes the controller class.
      */
@@ -129,7 +129,7 @@ public class RentViaReservationController implements Initializable {
         
         if(selection==1) {
             try   {Confno = Integer.parseInt((String)confirmation_number.getText()); valid_confirmation_number=true;}
-        catch (NumberFormatException e) {message.setText("Invalid confrimation");valid_confirmation_number=false;}
+        catch (NumberFormatException e) {message.setText("Invalid confirmation");valid_confirmation_number=false;}
         }
         
         if(null==expirydate.getValue())
@@ -139,9 +139,9 @@ public class RentViaReservationController implements Initializable {
         
         if(valid_Dlicense && valid_CardNumber && valid_confirmation_number && isValidExpiryDate)  {
             
-                Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+                Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
                 Statement myStmt = myConn.createStatement();
-                ResultSet myRs = myStmt.executeQuery("select * from reservation where Confno="+Confno+"");
+                ResultSet myRs = myStmt.executeQuery("select * from Reservation where Confno="+Confno+"");
               
                 int count=0;
                 while(myRs.next()) {count++;}
@@ -156,22 +156,22 @@ public class RentViaReservationController implements Initializable {
                     Equipment = myRs.getString("Equipment");
                     if(Equipment!=null) Equipment = "'"+Equipment+"'";
                    
-                    myRs = myStmt.executeQuery("select odometer from vehicle where Vlicense="+Vlicense+"");
+                    myRs = myStmt.executeQuery("select Odometer from Vehicle where Vlicense="+Vlicense+"");
                     myRs.next();
                     Odometer = myRs.getInt("odometer");
 
-                   myRs = myStmt.executeQuery("select * FROM rentalagreement WHERE ConfNo="+Confno);
+                   myRs = myStmt.executeQuery("select * FROM RentalAgreement WHERE ConfNo="+Confno);
                    count=0;
                    while(myRs.next()) {count++;}
                     if(count==0) {
-                        String sql = "INSERT INTO rentalagreement (ConfNo,Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Dlicense,Equipment) " +
+                        String sql = "INSERT INTO RentalAgreement (ConfNo,Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Dlicense,Equipment) " +
                                  "VALUES ("+Confno+",'"+customer_phone+"',"+Vlicense+","+CardNumber+",'"+expirydate.getValue()+"','"+(String)cardtype.getValue()+"',"+Odometer+",'"+Pickup_time+"','"+Dropoff_time+"',"+Dlicense+","+Equipment+")";
                         myStmt.executeUpdate(sql);
 
-                        myRs = myStmt.executeQuery("select MAX(RentId) AS Latest_Entry FROM rentalagreement");
+                        myRs = myStmt.executeQuery("select MAX(RentId) AS Latest_Entry FROM RentalAgreement");
                         myRs.next();
                         Integer latest_entry_number = myRs.getInt("Latest_Entry");
-                        message.setText("Rental Id : "+latest_entry_number.toString());
+                        message.setText("Rental Identifier "+latest_entry_number.toString());
                     }
                     else 
                     { message.setText("Rental Agreement already exists ..." );

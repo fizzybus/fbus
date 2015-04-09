@@ -33,8 +33,8 @@ public class ClubMemberController implements Initializable {
     @FXML private TextField location_m,city_m;
     @FXML private Label membership_status;
     @FXML DatePicker date_membership;
-    final private String user= "root";
-    final private String pass= "";
+    final private String user= "team06";
+    final private String pass= "t3xtb00k";
     
     @FXML private void Reset() {
         
@@ -55,18 +55,18 @@ public class ClubMemberController implements Initializable {
             }
             else {
          
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             membership_status.setText(" ");
             Statement myStmt = myConn.createStatement();
-            String sql = "SELECT * from customer where Name='"+(String)cust_name_m.getText()+"' and address='"+location_m.getText()+"' and city='"+city_m.getText()+"'";
+            String sql = "SELECT * from Customer where Name='"+(String)cust_name_m.getText()+"' and Address='"+location_m.getText()+"' and City='"+city_m.getText()+"'";
             ResultSet myRs = myStmt.executeQuery(sql);
             int count = 0;
             while (myRs.next()) { count++; }
             if(count==0) {membership_status.setText("Please verify info");}
             else {
                 myRs.previous();
-                String Phone = myRs.getString("phone_number");
-                sql = "INSERT INTO clubmember (phone_number,Mem_date) " +
+                String Phone = myRs.getString("Phone_number");
+                sql = "INSERT INTO ClubMember (Phone_number,Mem_date) " +
                          "VALUES ('"+Phone+"','"+date_membership.getValue()+"')";
                 
                 Boolean isOk= true;
@@ -78,7 +78,7 @@ public class ClubMemberController implements Initializable {
                 { isOk=false; membership_status.setText("Customer already a member ..");}  
                 
                 if(isOk) {
-                    sql = "UPDATE customer SET clubmember=1 WHERE phone_number='"+Phone+"'";
+                    sql = "UPDATE Customer SET Clubmember=1 WHERE Phone_number='"+Phone+"'";
                     myStmt.executeUpdate(sql);
                 }
             

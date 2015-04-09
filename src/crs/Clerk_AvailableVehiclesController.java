@@ -40,8 +40,8 @@ public class Clerk_AvailableVehiclesController implements Initializable {
     @FXML private TableColumn<AvailableVehicle,String>  Name;
     @FXML private TableColumn<AvailableVehicle,String>  Type;
     @FXML private TableColumn<AvailableVehicle,Integer>  Vlicense;
-    final private String user= "root";
-    final private String pass= "";
+    final private String user= "team06";
+    final private String pass= "t3xtb00k";
     
     public void Populate_Table() {
         Object Branch_ID;
@@ -65,11 +65,11 @@ public class Clerk_AvailableVehiclesController implements Initializable {
               Dropoff_Date =  To.getValue() + " " + hh2.getValue() + ":" +mm2.getValue()+ ":00";
             
             
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
             Statement myStmt1 = myConn.createStatement();
            
-             ResultSet myRs = myStmt.executeQuery("select * from branch where location='"+(String)_location.getValue() +"'");
+             ResultSet myRs = myStmt.executeQuery("select * from Branch where Location='"+(String)_location.getValue() +"'");
              int count=0;
              while(myRs.next()) 
              { count++; } 
@@ -81,15 +81,15 @@ public class Clerk_AvailableVehiclesController implements Initializable {
                  
                      
              String SQL = " select distinct v.BranchID,v.Vtype_name,v.Vname,v.Vlicense\n" +
-                                    "from vehicle v\n" +
+                                    "from Vehicle v\n" +
                                     "where 1=1\n" +
                                     "and v.Vlicense not in\n" +
-                                    "(select vlicense from ((select distinct v.Vlicense from vehicle v, RentalAgreement r\n" +
+                                    "(select Vlicense from ((select distinct v.Vlicense from Vehicle v, RentalAgreement r\n" +
                                     "where 1=1\n" +
                                     "and v.Vlicense=r.Vlicense \n" +
                                     "and r.Dropoff_time > '"+Pickup_Date +"' and r.Pickup_time < '"+Dropoff_Date +"')\n" +
                                     "union\n" +
-                                    "(select distinct v.Vlicense from vehicle v,Reservation res\n" +
+                                    "(select distinct v.Vlicense from Vehicle v,Reservation res\n" +
                                     "where 1=1\n" +
                                     "and v.Vlicense=res.Vlicense \n" +
                                     "and res.Dropoff_time > '"+Pickup_Date +"' and res.Pickup_time < '"+Dropoff_Date +"')) t1)\n" +
@@ -100,7 +100,7 @@ public class Clerk_AvailableVehiclesController implements Initializable {
             myRs =  myStmt.executeQuery(SQL);
             
             while (myRs.next()) { 
-                ResultSet myRs1 = myStmt1.executeQuery("select location from branch where BranchID="+myRs.getInt("BranchID")+"");
+                ResultSet myRs1 = myStmt1.executeQuery("select Location from Branch where BranchID="+myRs.getInt("BranchID")+"");
                 myRs1.next();    String _Location = myRs1.getString("location");
                 myRs1.close();
                 list.add(new AvailableVehicle  (_Location, myRs.getString("Vname"),myRs.getString("Vtype_name"), myRs.getInt("Vlicense")   )); 
@@ -123,12 +123,12 @@ public class Clerk_AvailableVehiclesController implements Initializable {
         List<String> list = new ArrayList<String>();
         List<String> listvehicletype = new ArrayList<String>();
         try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
-            ResultSet myRs = myStmt.executeQuery("select location from branch");
-            while (myRs.next()) { list.add(myRs.getString("location")); }  
-            myRs = myStmt.executeQuery("select vtype_name from vehicletype");
-            while (myRs.next()) { listvehicletype.add(myRs.getString("vtype_name")); }  
+            ResultSet myRs = myStmt.executeQuery("select Location from Branch");
+            while (myRs.next()) { list.add(myRs.getString("Location")); }  
+            myRs = myStmt.executeQuery("select Vtype_name from VehicleType");
+            while (myRs.next()) { listvehicletype.add(myRs.getString("Vtype_name")); }  
         } catch (Exception exc) {exc.printStackTrace();}  
          
         ObservableList<String> observableList = FXCollections.observableList(list);

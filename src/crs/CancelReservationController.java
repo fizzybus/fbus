@@ -41,8 +41,8 @@ public class CancelReservationController implements Initializable {
    @FXML private Label message;
    @FXML private DatePicker from,to;
    private Integer choice;
-   final private String user= "root";
-   final private String pass= "";
+   final private String user= "team06";
+   final private String pass= "t3xtb00k";
     
     
    @FXML 
@@ -66,7 +66,7 @@ public class CancelReservationController implements Initializable {
    
    @FXML public void DeleteReservation() throws SQLException {
        
-       Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+       Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
        Statement myStmt = myConn.createStatement();
        
        if(choice==1) {
@@ -85,7 +85,7 @@ public class CancelReservationController implements Initializable {
                 if(isvalid_phone) { 
 
                     String customer_phone = ds1.getText()+"-"+ds2.getText()+"-"+ds3.getText();  
-                    String sql = "DELETE FROM reservation WHERE Phone_number='"+customer_phone+"' and DATE(Pickup_time)='"+from.getValue() +"' and DATE(Dropoff_time)='"+to.getValue() +"'";
+                    String sql = "DELETE FROM Reservation WHERE Phone_number='"+customer_phone+"' and DATE(Pickup_time)='"+from.getValue() +"' and DATE(Dropoff_time)='"+to.getValue() +"'";
                     System.out.println(sql);
                     
                     try {
@@ -115,7 +115,7 @@ public class CancelReservationController implements Initializable {
            
             if(isvalid_confirmation)  {
                 
-                String sql = "DELETE FROM reservation WHERE Confno='"+confirmation+"'";
+                String sql = "DELETE FROM Reservation WHERE Confno='"+confirmation+"'";
                 try {
                     int row = myStmt.executeUpdate(sql);
                     if(row ==1)

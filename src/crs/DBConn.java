@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class DBConn {
     private static String user = "root";
     private static String pass = "";
-    private static String url = "jdbc:mysql://localhost:3306/crs";
+    private static String url = "jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06";
    // private static String user = "team06";
     //private static String pass = "t3xtb00k";
     //private static String url = "jdbc:mysql://dbserver.mss.icics.ubc.ca/team06";

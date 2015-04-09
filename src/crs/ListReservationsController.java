@@ -38,8 +38,8 @@ public class ListReservationsController implements Initializable {
     @FXML private Label label;
     private Integer ConfNo;
     
-        final private String user= "root";
-        final private String pass= "";
+        final private String user= "team06";
+        final private String pass= "t3xtb00k";
         
         public Integer ConfNo() {
             return ConfNo;
@@ -50,10 +50,10 @@ public class ListReservationsController implements Initializable {
           
         List<ReservationCustomer> list = new ArrayList<>();
         try {
-            Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/crs", user, pass);
+            Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
-            System.out.println("Select * from reservation where Phone_number='"+Info+"'");
-            ResultSet myRs =  myStmt.executeQuery("Select * from reservation where Phone_number='"+Info+"'" );
+            System.out.println("Select * from Reservation where Phone_number='"+Info+"'");
+            ResultSet myRs =  myStmt.executeQuery("Select * from Reservation where Phone_number='"+Info+"'" );
             while (myRs.next()) { System.out.println("ConfoBo:"+myRs.getInt("Confno")+" Vlicense:"+myRs.getInt("Vlicense"));
                 list.add(  new ReservationCustomer (myRs.getInt("Confno"),myRs.getInt("Vlicense"),myRs.getInt("BranchID"),myRs.getString("Vtype_name"),myRs.getString("Pickup_time"),myRs.getString("Dropoff_time") )); }         
         } catch (Exception exc) {exc.printStackTrace();}  
