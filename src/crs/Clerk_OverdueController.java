@@ -41,6 +41,7 @@ public class Clerk_OverdueController implements Initializable{
     @FXML private TableColumn<AvailableVehicle,String>  Location;
     @FXML private TableColumn<AvailableVehicle,String>  Name;
     @FXML private TableColumn<AvailableVehicle,String>  Type;
+    @FXML private TableColumn<AvailableVehicle,Integer>  Vlicense;
     final private String user= "root";
     final private String pass= "";
     
@@ -60,7 +61,7 @@ public class Clerk_OverdueController implements Initializable{
              String VType = (String)vehicletype.getValue();
              if(VType==null) VType = "";
         List<AvailableVehicle> list = new ArrayList<>();
-        String SQL = "select distinct v.BranchID,v.Vtype_name,v.Vname\n" +
+        String SQL = "select distinct v.BranchID,v.Vtype_name,v.Vname,v.Vlicense\n" +
                             "from RentalAgreement r, vehicle v\n" +
                             "where 1=1\n" +
                             "and v.Vlicense=r.Vlicense \n" +
@@ -71,7 +72,7 @@ public class Clerk_OverdueController implements Initializable{
                             "(select 1 from returnvehicle ret\n" +
                             "where 1=1\n" +
                             "and ret.rentid=r.rentid )\n" +
-                      "group by v.BranchID,v.Vtype_name,v.Vname";
+                      "group by v.BranchID,v.Vtype_name,v.Vname,v.Vlicense";
         
         myRs =  myStmt.executeQuery(SQL);
             
@@ -79,7 +80,7 @@ public class Clerk_OverdueController implements Initializable{
                 ResultSet myRs1 = myStmt1.executeQuery("select location from branch where BranchID="+myRs.getInt("BranchID")+"");
                 myRs1.next();    String _Location = myRs1.getString("location");
                 myRs1.close();
-                list.add(new AvailableVehicle  (_Location, myRs.getString("Vname"),myRs.getString("Vtype_name")    )); 
+                list.add(new AvailableVehicle  (_Location, myRs.getString("Vname"),myRs.getString("Vtype_name"), myRs.getInt("Vlicense")    )); 
             }         
        
          
@@ -87,6 +88,7 @@ public class Clerk_OverdueController implements Initializable{
         Location.setCellValueFactory(new PropertyValueFactory<>("Location"));
         Name.setCellValueFactory(new PropertyValueFactory<AvailableVehicle,String>("Name"));
         Type.setCellValueFactory(new PropertyValueFactory<AvailableVehicle,String>("Type"));
+        Vlicense.setCellValueFactory(new PropertyValueFactory<AvailableVehicle,Integer>("Vlicense"));
 
         table_overdue.setItems(observableList);    
         

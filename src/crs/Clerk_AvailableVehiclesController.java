@@ -39,6 +39,7 @@ public class Clerk_AvailableVehiclesController implements Initializable {
     @FXML private TableColumn<AvailableVehicle,String>  Location;
     @FXML private TableColumn<AvailableVehicle,String>  Name;
     @FXML private TableColumn<AvailableVehicle,String>  Type;
+    @FXML private TableColumn<AvailableVehicle,Integer>  Vlicense;
     final private String user= "root";
     final private String pass= "";
     
@@ -79,7 +80,7 @@ public class Clerk_AvailableVehiclesController implements Initializable {
              if(Type==null) Type = "";
                  
                      
-             String SQL = " select distinct v.BranchID,v.Vtype_name,v.Vname\n" +
+             String SQL = " select distinct v.BranchID,v.Vtype_name,v.Vname,v.Vlicense\n" +
                                     "from vehicle v\n" +
                                     "where 1=1\n" +
                                     "and v.Vlicense not in\n" +
@@ -94,7 +95,7 @@ public class Clerk_AvailableVehiclesController implements Initializable {
                                     "and res.Dropoff_time > '"+Pickup_Date +"' and res.Pickup_time < '"+Dropoff_Date +"')) t1)\n" +
                                     "and v.Vtype_name like '%"+ Type+"%'\n" +
                                     "and v.BranchID like '%"+Branch_ID+"%'\n" +
-                            "group by v.BranchID,v.Vtype_name,v.Vname"; 
+                            "group by v.BranchID,v.Vtype_name,v.Vname,v.Vlicense"; 
              
             myRs =  myStmt.executeQuery(SQL);
             
@@ -102,7 +103,7 @@ public class Clerk_AvailableVehiclesController implements Initializable {
                 ResultSet myRs1 = myStmt1.executeQuery("select location from branch where BranchID="+myRs.getInt("BranchID")+"");
                 myRs1.next();    String _Location = myRs1.getString("location");
                 myRs1.close();
-                list.add(new AvailableVehicle  (_Location, myRs.getString("Vname"),myRs.getString("Vtype_name")    )); 
+                list.add(new AvailableVehicle  (_Location, myRs.getString("Vname"),myRs.getString("Vtype_name"), myRs.getInt("Vlicense")   )); 
             }         
         } catch (Exception exc) {exc.printStackTrace();}  
          
@@ -110,7 +111,7 @@ public class Clerk_AvailableVehiclesController implements Initializable {
         Location.setCellValueFactory(new PropertyValueFactory<>("Location"));
         Name.setCellValueFactory(new PropertyValueFactory<AvailableVehicle,String>("Name"));
         Type.setCellValueFactory(new PropertyValueFactory<AvailableVehicle,String>("Type"));
-
+        Vlicense.setCellValueFactory(new PropertyValueFactory<AvailableVehicle,Integer>("Vlicense"));
         table_available_vehicles.setItems(observableList);    
         
         }

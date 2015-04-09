@@ -314,7 +314,11 @@ public class BookCarController implements Initializable {
        
        String Equip= (String)equipment.getValue();
        if("None"== ((String)equipment.getValue()))
-            Equip = null;
+       {  Equip = null; }
+       else {
+           String Tick = "'";
+           Equip = Tick+Equip+Tick;
+       }
        
        if(_License && _cardtype && _creditcardnumber && _card_expiry && isValidCustomer && isValidVehicle && isValidTime && isOKprice) {
        Integer latest_entry_number=0;

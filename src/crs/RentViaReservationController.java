@@ -114,6 +114,7 @@ public class RentViaReservationController implements Initializable {
         Integer Vlicense;
         Integer Dlicense=0;
         Integer CardNumber=0;
+        String Equipment;
         String Pickup_time,Dropoff_time;
         Integer Odometer;
         
@@ -144,13 +145,17 @@ public class RentViaReservationController implements Initializable {
               
                 int count=0;
                 while(myRs.next()) {count++;}
-                if(count==0) message.setText("No reservation record exits ...");
+                if(count==0) message.setText("No reservation record ...");
                 else {
                     myRs.previous();
                     Vlicense = myRs.getInt("Vlicense");
                     if(selection==1) customer_phone = myRs.getString("Phone_number");
                     Pickup_time = myRs.getString("Pickup_time");
                     Dropoff_time = myRs.getString("Dropoff_time");
+                    
+                    Equipment = myRs.getString("Equipment");
+                    if(Equipment!=null) Equipment = "'"+Equipment+"'";
+                   
                     myRs = myStmt.executeQuery("select odometer from vehicle where Vlicense="+Vlicense+"");
                     myRs.next();
                     Odometer = myRs.getInt("odometer");
@@ -159,8 +164,8 @@ public class RentViaReservationController implements Initializable {
                    count=0;
                    while(myRs.next()) {count++;}
                     if(count==0) {
-                        String sql = "INSERT INTO rentalagreement (ConfNo,Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Dlicense) " +
-                                 "VALUES ("+Confno+",'"+customer_phone+"',"+Vlicense+","+CardNumber+",'"+expirydate.getValue()+"','"+(String)cardtype.getValue()+"',"+Odometer+",'"+Pickup_time+"','"+Dropoff_time+"',"+Dlicense+")";
+                        String sql = "INSERT INTO rentalagreement (ConfNo,Phone_number,Vlicense,CardNo,ExpiryDate,CardType,Odometer,Pickup_time,Dropoff_time,Dlicense,Equipment) " +
+                                 "VALUES ("+Confno+",'"+customer_phone+"',"+Vlicense+","+CardNumber+",'"+expirydate.getValue()+"','"+(String)cardtype.getValue()+"',"+Odometer+",'"+Pickup_time+"','"+Dropoff_time+"',"+Dlicense+","+Equipment+")";
                         myStmt.executeUpdate(sql);
 
                         myRs = myStmt.executeQuery("select MAX(RentId) AS Latest_Entry FROM rentalagreement");

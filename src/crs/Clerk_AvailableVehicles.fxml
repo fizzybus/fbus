@@ -10,9 +10,10 @@
    <children>
       <TableView fx:id="table_available_vehicles" layoutX="73.0" layoutY="159.0" prefHeight="200.0" prefWidth="527.0">
         <columns>
-          <TableColumn fx:id="Location" prefWidth="195.0" text="Location" />
-            <TableColumn fx:id="Name" prefWidth="166.0" text="Name" />
-            <TableColumn fx:id="Type" prefWidth="165.0" text="Type" />
+          <TableColumn fx:id="Location" prefWidth="143.0" text="Location" />
+            <TableColumn fx:id="Name" prefWidth="133.0" text="Name" />
+            <TableColumn fx:id="Type" prefWidth="154.0" text="Type" />
+            <TableColumn fx:id="Vlicense" prefWidth="96.0" text="License" />
         </columns>
       </TableView>
       <Button layoutX="613.0" layoutY="328.0" mnemonicParsing="false" onAction="#Populate_Table" prefHeight="31.0" prefWidth="72.0" text="List" />
