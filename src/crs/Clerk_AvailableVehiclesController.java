@@ -105,6 +105,9 @@ public class Clerk_AvailableVehiclesController implements Initializable {
                 myRs1.close();
                 list.add(new AvailableVehicle  (_Location, myRs.getString("Vname"),myRs.getString("Vtype_name"), myRs.getInt("Vlicense")   )); 
             }         
+            
+            if (myConn != null) myConn.close();
+            
         } catch (Exception exc) {exc.printStackTrace();}  
          
         ObservableList<AvailableVehicle> observableList = FXCollections.observableList(list);
@@ -129,6 +132,7 @@ public class Clerk_AvailableVehiclesController implements Initializable {
             while (myRs.next()) { list.add(myRs.getString("Location")); }  
             myRs = myStmt.executeQuery("select Vtype_name from VehicleType");
             while (myRs.next()) { listvehicletype.add(myRs.getString("Vtype_name")); }  
+            if (myConn != null) myConn.close();
         } catch (Exception exc) {exc.printStackTrace();}  
          
         ObservableList<String> observableList = FXCollections.observableList(list);

@@ -101,7 +101,6 @@
             </Pane>
             <Pane prefHeight="383.0" prefWidth="267.0" GridPane.columnIndex="2">
                <children>
-                  <ComboBox fx:id="equipment" layoutX="23.0" layoutY="97.0" prefHeight="31.0" prefWidth="129.0" promptText="None" />
                   <Label layoutX="23.0" layoutY="69.0" prefHeight="17.0" prefWidth="142.0" text="Additional Equipment">
                      <font>
                         <Font name="System Bold" size="12.0" />
@@ -122,6 +121,7 @@
                         <Insets right="10.0" />
                      </padding>
                   </Label>
+                  <Button fx:id="equipment" layoutX="21.0" layoutY="105.0" mnemonicParsing="false" onAction="#Load_Equipment_PopUP" prefHeight="31.0" prefWidth="133.0" text="List options" />
                </children>
             </Pane>
          </children>

@@ -55,6 +55,7 @@ public class ListVehiclesController implements Initializable {
             Statement myStmt = myConn.createStatement();
             ResultSet myRs =  myStmt.executeQuery("Select * from Vehicle where BranchID="+Info.getdata2()+" and Vtype_name='"+Info.getdata1()+"' and Status=1 order by Vlicense" );
             while (myRs.next()) { list.add(new Vehicle  (myRs.getInt("Vlicense"), myRs.getString("Vname"),myRs.getInt("Year")    )); }         
+            if (myConn != null) myConn.close();
         } catch (Exception exc) {exc.printStackTrace();}  
          
         ObservableList<Vehicle> observableList = FXCollections.observableList(list);

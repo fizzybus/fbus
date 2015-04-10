@@ -55,7 +55,8 @@ public class ListReservationsController implements Initializable {
             System.out.println("Select * from Reservation where Phone_number='"+Info+"'");
             ResultSet myRs =  myStmt.executeQuery("Select * from Reservation where Phone_number='"+Info+"'" );
             while (myRs.next()) { System.out.println("ConfoBo:"+myRs.getInt("Confno")+" Vlicense:"+myRs.getInt("Vlicense"));
-                list.add(  new ReservationCustomer (myRs.getInt("Confno"),myRs.getInt("Vlicense"),myRs.getInt("BranchID"),myRs.getString("Vtype_name"),myRs.getString("Pickup_time"),myRs.getString("Dropoff_time") )); }         
+                list.add(  new ReservationCustomer (myRs.getInt("Confno"),myRs.getInt("Vlicense"),myRs.getInt("BranchID"),myRs.getString("Vtype_name"),myRs.getString("Pickup_time"),myRs.getString("Dropoff_time") )); } 
+            if (myConn != null) myConn.close();
         } catch (Exception exc) {exc.printStackTrace();}  
           
          //label.setText("Yes controller runs");

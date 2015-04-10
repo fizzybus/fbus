@@ -111,6 +111,7 @@ public class LoginController implements Initializable {
             int count = 0;
             while (myRs.next()) { count++; }
             if(count==0) valid = false;
+            if (myConn != null) myConn.close();
         } catch (Exception exc) {
             exc.printStackTrace();
         }  

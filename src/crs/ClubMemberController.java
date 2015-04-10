@@ -85,7 +85,7 @@ public class ClubMemberController implements Initializable {
             
             
             }
-        
+                if (myConn != null) myConn.close();
          
             }
          

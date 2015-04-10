@@ -48,13 +48,13 @@ import javafx.stage.Stage;
  */
 public class BookCarController implements Initializable {
     
-    @FXML private ComboBox location,vehicletype,togglecombo,equipment;
+    @FXML private ComboBox location,vehicletype,togglecombo;
     @FXML private ComboBox h1,h2,m1,m2,s1,s2,cardtype; 
     @FXML private Label location_label,date_label,estimated_cost;
     @FXML private DatePicker pickup,dropoff,card_expiry;
     @FXML private TextField license,creditcardnumber,digset1,digset2,digset3,customername;
     @FXML private Pane pane,content_pane,pane_validate;
-    @FXML private Button pop_confirmation_button,list_vehicle_button;
+    @FXML private Button pop_confirmation_button,list_vehicle_button,equipment;
     
     @FXML private Label pop_customername,pop_customerphone,customer_indatabase;
     @FXML private Label pop_location,pop_pickup,pop_dropoff;
@@ -68,6 +68,9 @@ public class BookCarController implements Initializable {
     private int trans_status;  // Rent or Reserve (Reserve = 0 Rent = 1)
     private String V_Type,V_Category,V_Name,Date1,Date2,customer_phone;
     private float week,day,hour,day_raw;
+    private List<String> e_list;
+    private int[] List = {0,0};
+    private float[] Cost_Equipment = {0.00f,0.00f};
     
     private Boolean isValidCustomer = false;
     private Boolean isValidVehicle = false;
@@ -104,6 +107,13 @@ public class BookCarController implements Initializable {
                       }
                       else
                           customer_indatabase.setText("No such customer");
+                      
+                      
+                      if (myConn != null) {
+                                try {
+                                    myConn.close();
+                                } catch (SQLException e) { /* ignored */}
+                            }
 
 
                   } catch (Exception exc) {exc.printStackTrace();}  
@@ -183,7 +193,15 @@ public class BookCarController implements Initializable {
                                         day  = map.get("day");
                                         hour = map.get("hour");
                                         day_raw = map.get("day_raw");
-                                    }   
+                                    }  
+                                    
+                                    
+                                     if (myConn != null) 
+                                     myConn.close();
+                                           
+                                    
+                                    
+                                    
                             } catch (Exception exc) {exc.printStackTrace();}     
                 } else {date_label.setText("Please select vehicle");}
         }       
@@ -222,23 +240,42 @@ public class BookCarController implements Initializable {
        return map;
    }
    
+   @FXML 
+   private void Load_Equipment_PopUP() throws IOException{
+       
+       FXMLLoader loader = new FXMLLoader();
+       loader.setLocation(getClass().getResource("EquipmentList.fxml"));
+       loader.load();
+       Parent p = loader.getRoot();
+       Stage stage = new Stage();
+       stage.setScene(new Scene(p));
+       stage.initModality(Modality.APPLICATION_MODAL);
+       stage.initOwner(equipment.getScene().getWindow());
+       EquipmentListController controller = loader.getController();
+        
+        controller.setInfo(e_list.get(0),e_list.get(1));   
+       stage.showAndWait();
+       
+       List = controller.getQuantities();
+       System.out.println("Quantity 1 -> "+List[0]);
+       System.out.println("Quantity 2 -> "+List[1]);
+       
+   }
+   
    
    @FXML 
    private void Load_Equipment( ) {
        
-        List<String> e_list = new ArrayList<String>();
+        e_list = new ArrayList<String>();
         try {
             Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
             Statement myStmt = myConn.createStatement();
             ResultSet myRs = myStmt.executeQuery("select EquipmentName from Additional_equipment where VehicleCategory='"+V_Category+"'");
-            e_list.add("None");
             while (myRs.next()) { e_list.add(myRs.getString("EquipmentName")); }  
+            
+            if (myConn != null) myConn.close();
+            
         } catch (Exception exc) {exc.printStackTrace();}  
-        
-        ObservableList eqp_list = FXCollections.observableList(e_list);
-        equipment.setItems(eqp_list);
-        equipment.setValue("None");
-       
        
    }
    
@@ -257,6 +294,7 @@ public class BookCarController implements Initializable {
              ResultSet myRs = myStmt.executeQuery("select BranchID from Branch where Location='"+(String)location.getValue() +"'");
             
             myRs.next();  Branch_ID =  myRs.getInt("BranchID");
+            if (myConn != null) myConn.close();
         } catch (Exception exc) {exc.printStackTrace();}  
        
        Mediator0 Info = new Mediator0((String)vehicletype.getValue(),Branch_ID);
@@ -284,6 +322,7 @@ public class BookCarController implements Initializable {
                       ResultSet myRs = myStmt.executeQuery("select Category,Vtype_name,Vname,Odometer from Vehicle where Vlicense="+Vehicle_ID+"");
 
                      myRs.next();  odometer = myRs.getInt("Odometer");  V_Name = myRs.getString("Vname"); V_Category =  myRs.getString("Category");  V_Type = myRs.getString("Vtype_name");
+                     if (myConn != null) myConn.close();
                  } catch (Exception exc) {exc.printStackTrace();}  
 
                 Load_Equipment();
@@ -296,13 +335,7 @@ public class BookCarController implements Initializable {
    @FXML
    private void Load_Confirmation(ActionEvent event)throws IOException {
        
-       /*
-             private Boolean isValidCustomer = false;
-    private Boolean isValidVehicle = false;
-    private Boolean isValidTime = false;
-    private Boolean isOKprice = false;
-               
-        */     
+ 
        Boolean _License=true,_cardtype=true,_creditcardnumber=true,_card_expiry=true;
        if(trans_status==1) {
            try {int _ds1 = Integer.parseInt(license.getText()); } catch (NumberFormatException e) {message_custinfo.setText("Invalid License"); _License=false;}
@@ -312,14 +345,15 @@ public class BookCarController implements Initializable {
 
        }
        
-       String Equip= (String)equipment.getValue();
-       if("None"== ((String)equipment.getValue()))
+       Integer Equip= null;
+       /*
+       if("None"== null))
        {  Equip = null; }
        else {
            String Tick = "'";
            Equip = Tick+Equip+Tick;
        }
-       
+       */
        if(_License && _cardtype && _creditcardnumber && _card_expiry && isValidCustomer && isValidVehicle && isValidTime && isOKprice) {
        Integer latest_entry_number=0;
        
@@ -330,6 +364,15 @@ public class BookCarController implements Initializable {
             Statement myStmt = myConn.createStatement();
             ResultSet myRs;
             String sql = "";
+            
+            sql = "INSERT INTO Equipment_details(EquipName1,EquipName2,EquipQuantity1,EquipQuantity2,EquipCost1,EquipCost2,TotalCost) VALUES ('"+e_list.get(0)+"','"+e_list.get(1)+"',"+List[0]+","+List[1]+","+Cost_Equipment[0]+","+Cost_Equipment[1]+","+Cost_Equipment[0]+Cost_Equipment[1]+")";
+            //System.out.println(sql);
+            myStmt.executeUpdate(sql);
+            
+            myRs = myStmt.executeQuery("select MAX(EquipConf) AS Latest_Entry FROM Equipment_details");
+            myRs.next();
+            Equip = myRs.getInt("Latest_Entry");
+            
             if(trans_status==0) {
                  sql = "INSERT INTO Reservation (Phone_number,Vtype_name,Vlicense,BranchID,Pickup_time,Dropoff_time,Equipment) " +
                          "VALUES ('"+customer_phone+"','"  + (String)vehicletype.getValue()+ "',"+Vehicle_ID+","+Branch_ID+",'"+ Date1+"','"+Date2+"',"+Equip+")";
@@ -350,10 +393,13 @@ public class BookCarController implements Initializable {
             
             myRs.next();
             latest_entry_number = myRs.getInt("Latest_Entry");
+            
+            if (myConn != null) myConn.close();
+            
         } catch (Exception exc) {exc.printStackTrace();}  
        
-       
-       Mediator1 Info = new Mediator1((String)customername.getText(),customer_phone,V_Name,Vehicle_ID,V_Type,trans_status,(String)location.getValue(),Date1,Date2,(String)equipment.getValue(),estimated_cost.getText(),latest_entry_number);
+       // Equipment is set to null here need to change
+       Mediator1 Info = new Mediator1((String)customername.getText(),customer_phone,V_Name,Vehicle_ID,V_Type,trans_status,(String)location.getValue(),Date1,Date2,null,estimated_cost.getText(),latest_entry_number);
        FXMLLoader loader = new FXMLLoader();
        loader.setLocation(getClass().getResource("Confirmation.fxml"));
        loader.load();
@@ -378,9 +424,7 @@ public class BookCarController implements Initializable {
    
    @FXML
    private void CalculateEstimatedCost(ActionEvent event) throws SQLException{
-       
-       
-    
+   
        if(isValidTime  && isValidVehicle  ) {
        Connection myConn = DriverManager.getConnection("jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06", user, pass);
        Statement myStmt = myConn.createStatement();
@@ -390,17 +434,27 @@ public class BookCarController implements Initializable {
        float price1 = day*(myRs.getFloat("Daily_rate")+myRs.getFloat("Ins_drate"))  +  
                      week*(myRs.getFloat("Weekly_rate")+myRs.getFloat("Ins_wrate"))  + 
                      hour*(myRs.getFloat("Hourly_rate")+myRs.getFloat("Ins_hrate"))  ;
+       
        float price2 = 0.00f;
-       if(equipment.getValue()!="None") {
-           System.out.println("select * from Additional_equipment where EquipmentName='"+(String)equipment.getValue()+"'");
-           myRs = myStmt.executeQuery("select * from Additional_equipment where EquipmentName='"+(String)equipment.getValue()+"'");
-           myRs.next();
-        //   System.out.println("Daily Rate "+myRs1.getFloat("daily_rate"));
-        //   System.out.println("Hourly Rate "+myRs1.getFloat("hourly_rate"));
-           price2 = day_raw*(myRs.getFloat("Daily_rate")) + hour*(myRs.getFloat("Hourly_rate"));    
-       }
+       
+        String SQL1 = "select * from Additional_equipment where EquipmentName='"+e_list.get(0)+"'";
+        String SQL2 = "select * from Additional_equipment where EquipmentName='"+e_list.get(1)+"'";
+        
+        myRs = myStmt.executeQuery(SQL1); myRs.next();
+        float _price2 = Cost_Equipment[0] = List[0]*(day_raw*(myRs.getFloat("Daily_rate")) + hour*(myRs.getFloat("Hourly_rate")));  
+        System.out.println("Price estimation Equipment 1 -> "+_price2);
+        
+        myRs = myStmt.executeQuery(SQL2); myRs.next();
+        float price2_ = Cost_Equipment[1] = List[1]*(day_raw*(myRs.getFloat("Daily_rate")) + hour*(myRs.getFloat("Hourly_rate")));  
+        System.out.println("Price estimation Equipment 2 -> "+price2_);
+       
+        price2 = _price2 + price2_;
+       
        estimated_cost.setText(String.format("%.2f",price1+price2)+"  CAD"); 
        isOKprice=true;
+       
+       if (myConn != null) myConn.close();
+       
        }
        else
            estimated_cost.setText("Time-Period or Vehicle Invalid");
@@ -429,7 +483,10 @@ public class BookCarController implements Initializable {
                     odometer   = myRs.getInt("odometer");
                 }
                 else
-                   location_label.setText("Unavailable");           
+                   location_label.setText("Unavailable");     
+                
+                if (myConn != null) myConn.close();
+                
              } catch (Exception exc) {exc.printStackTrace();}     
     }
         
@@ -453,6 +510,9 @@ public class BookCarController implements Initializable {
             while (myRs.next()) { list.add(myRs.getString("Location")); }  
             myRs = myStmt.executeQuery("select Vtype_name from VehicleType");
             while (myRs.next()) { listvehicletype.add(myRs.getString("Vtype_name")); }  
+            
+            if (myConn != null) myConn.close();
+            
         } catch (Exception exc) {exc.printStackTrace();}  
          
         ObservableList<String> observableList = FXCollections.observableList(list);

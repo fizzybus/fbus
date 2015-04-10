@@ -83,6 +83,8 @@ public class Clerk_ForSaleVehiclesController implements Initializable {
         Price.setCellValueFactory(new PropertyValueFactory<>("Price"));
         table_forsale.setItems(observableList);    
         
+        if (myConn != null) myConn.close();
+        
     }
     
     
@@ -102,6 +104,7 @@ public class Clerk_ForSaleVehiclesController implements Initializable {
             while (myRs.next()) { list.add(myRs.getString("Location")); }  
             myRs = myStmt.executeQuery("select Vtype_name from Vehicletype");
             while (myRs.next()) { listvehicletype.add(myRs.getString("Vtype_name")); }  
+            if (myConn != null) myConn.close();
         } catch (Exception exc) {exc.printStackTrace();}  
          
         ObservableList<String> observableList = FXCollections.observableList(list);

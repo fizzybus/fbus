@@ -24,7 +24,7 @@ public class CRS extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("Login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("menu_admin.fxml"));
         
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/inc/screen1.css").toExternalForm());
@@ -308,7 +308,7 @@ public class CRS extends Application {
     public static ArrayList<User> getUserList(){
         ArrayList<User> result = new ArrayList<User>();
         ArrayList< HashMap<String, String> > data = new ArrayList< HashMap<String, String> >();
-        data = dbc.getResult("SELECT *  FROM employees");
+        data = dbc.getResult("SELECT *  FROM Employees");
         //data = dbc.getResult("SELECT Type FROM price WHERE VType = '"+vtype+"'");
         for( HashMap<String, String> record : data ){
             User user = new User(); 
@@ -325,13 +325,13 @@ public class CRS extends Application {
     
     /*****vicky**********/
     public static int updateUser(User user){
-        int count =  dbc.itemUpdate("UPDATE employees SET password = '"+user.password
+        int count =  dbc.itemUpdate("UPDATE Employees SET password = '"+user.password
                 +"' WHERE Emp_id = "+user.emp_id);
         return count;
     }
     
     public static int removeUser(int userid){
-        int count =  dbc.itemUpdate("Delete from employees where Emp_id ="+userid);
+        int count =  dbc.itemUpdate("Delete from Employees where Emp_id ="+userid);
         return count;
     }
     

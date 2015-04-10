@@ -90,7 +90,9 @@ public class Clerk_OverdueController implements Initializable{
         Type.setCellValueFactory(new PropertyValueFactory<AvailableVehicle,String>("Type"));
         Vlicense.setCellValueFactory(new PropertyValueFactory<AvailableVehicle,Integer>("Vlicense"));
 
-        table_overdue.setItems(observableList);    
+        table_overdue.setItems(observableList); 
+        
+        if (myConn != null) myConn.close();
         
     }
     

@@ -51,14 +51,14 @@ public class ProcessReturnController implements Initializable {
     @FXML private TextField rental_id,ds1,ds2,ds3,use_points,reading_odometer;
     @FXML private Label message1,estimated_cost,member_points,message2;
     @FXML private DatePicker from,to,return_date;
-    private String equipment,Pickup_DateTime,ReturnDate,customer_name;
+    private String Pickup_DateTime,ReturnDate,customer_name;
     private Float bc=0f,ic=0f,ec=0f,oc=0f;
     private Integer choice;
     private long r_week=0,r_day=0,r_hour=0,r_day_raw=0;
     private Integer Odometer=0,Vlicense,Rent_ID;
     private String customer_phone;
     static Integer Total_points=0;
-    private Integer readingodometer=0;
+    private Integer readingodometer=0,equipment;
     private Boolean isValidCustomer = false,isPriceCalculated=false;
     private Integer clubmember=0,roadstar;
     final private String user= "team06";
@@ -126,7 +126,7 @@ public class ProcessReturnController implements Initializable {
                     Pickup_DateTime = Pickup_DateTime.substring(0, Pickup_DateTime.length() - 2);
                     System.out.println("Pickup DatTime :"+Pickup_DateTime);
                     Vlicense        = rs.getInt("Vlicense");
-                    equipment       = rs.getString("Equipment");
+                    equipment       = rs.getInt("Equipment");
                     
                     isValidCustomer = true;
                     
@@ -181,9 +181,9 @@ public class ProcessReturnController implements Initializable {
                             Pickup_DateTime = Pickup_DateTime.substring(0, Pickup_DateTime.length() - 2);
                             System.out.println("Pickup DatTime :"+Pickup_DateTime);
                             Vlicense        = rs.getInt("Vlicense");
-                            equipment       = rs.getString("Equipment");
+                            equipment       = rs.getInt("Equipment");
                             customer_phone =  rs.getString("Phone_number");
-                            equipment       = rs.getString("Equipment");
+                            
                             
                             isValidCustomer = true;
                             message1.setText("Record Located"); 
@@ -414,12 +414,11 @@ public class ProcessReturnController implements Initializable {
        System.out.println("Price 1 :"+price1);
        
        float price2 = 0.00f;
-       if(equipment!=null) {
-           System.out.println("select * from Additional_equipment where EquipmentName='"+equipment+"'");
-           myRs = myStmt.executeQuery("select * from Additional_equipment where EquipmentName='"+equipment+"'");
+           System.out.println("select  TotalCost from Equipment_details where EquipConf="+equipment+"");
+           myRs = myStmt.executeQuery("select TotalCost from Equipment_details where EquipConf="+equipment+"");
            myRs.next();
-           price2 = ec =day_raw*(myRs.getFloat("Daily_rate")) + hour*(myRs.getFloat("Hourly_rate"));    
-       }
+           price2 = ec = myRs.getFloat("TotalCost");   
+       
        System.out.println("Price 2 :"+price2);
        
        float total_cost = price1+price2+price3;

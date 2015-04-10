@@ -132,6 +132,8 @@ public class CancelReservationController implements Initializable {
            
        }
        
+       if (myConn != null) myConn.close();
+       
    }
    
    

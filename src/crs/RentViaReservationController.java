@@ -114,7 +114,7 @@ public class RentViaReservationController implements Initializable {
         Integer Vlicense;
         Integer Dlicense=0;
         Integer CardNumber=0;
-        String Equipment;
+        Integer Equipment;
         String Pickup_time,Dropoff_time;
         Integer Odometer;
         
@@ -153,8 +153,8 @@ public class RentViaReservationController implements Initializable {
                     Pickup_time = myRs.getString("Pickup_time");
                     Dropoff_time = myRs.getString("Dropoff_time");
                     
-                    Equipment = myRs.getString("Equipment");
-                    if(Equipment!=null) Equipment = "'"+Equipment+"'";
+                    Equipment = myRs.getInt("Equipment");
+                    
                    
                     myRs = myStmt.executeQuery("select Odometer from Vehicle where Vlicense="+Vlicense+"");
                     myRs.next();
@@ -180,7 +180,7 @@ public class RentViaReservationController implements Initializable {
                 
                 
             } 
-            
+            if (myConn != null) myConn.close();
         }
         
     }
