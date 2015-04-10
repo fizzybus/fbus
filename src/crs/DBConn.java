@@ -21,13 +21,14 @@ import java.util.logging.Logger;
  * @author Ralph
  */
 public class DBConn {
-    private static String user = "root";
-    private static String pass = "";
+  //  private static String user = "root";
+   // private static String pass = "";
     private static String url = "jdbc:mysql://dbserver.mss.icics.ubc.ca:3306/team06";
-   // private static String user = "team06";
-    //private static String pass = "t3xtb00k";
-    //private static String url = "jdbc:mysql://dbserver.mss.icics.ubc.ca/team06";
+    private static String user = "team06";
+    private static String pass = "t3xtb00k"; 
+    //url = "jdbc:mysql://dbserver.mss.icics.ubc.ca/team06";
     
+    //private static String
     private static Connection myConn;
     
     public DBConn(){
